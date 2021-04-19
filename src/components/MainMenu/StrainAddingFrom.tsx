@@ -1,82 +1,51 @@
+import { testStrainToJSON } from '../../models/strain/_test';
+
+function TextFormItem(props: { label: string; id: string }) {
+    return (
+        <div className='strain-form__item'>
+            <label htmlFor={props.id} className='strain-form__label'>
+                {props.label}
+            </label>
+            <input id={props.id} type='text' className='strain-form__input form-input' />
+        </div>
+    );
+}
+
+function SelectFormItem(props: { label: string; id: string; items: string[] }) {
+    return (
+        <div className='strain-form__item'>
+            <label htmlFor={props.id} className='strain-form__label'>
+                {props.label}
+            </label>
+            <select id={props.id} className='strain-form__input form-input'>
+                {props.items.map((item) => (
+                    <option key={item} value=''>
+                        {item}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+}
+
 export default function StrainAddingFrom() {
+    const bergeyTypes = ['Пункт 1', 'Пункт 2', 'Пункт 3'];
+
     return (
         <form action='' className='strain-form'>
-            <div className='strain-form__item'>
-                <label htmlFor='bergey-type_field' className='strain-form__label'>
-                    Тип по Берджи
-                </label>
-                <select id='bergey-type_field' className='strain-form__input form-input'>
-                    <option value=''>Пункт 1</option>
-                    <option value=''>Пункт 2</option>
-                    <option value=''>Пункт 3</option>
-                </select>
-            </div>
+            <p>{testStrainToJSON()}</p>
 
-            <div className='strain-form__item'>
-                <label htmlFor='name_field' className='strain-form__label'>
-                    Исхродный индекс
-                </label>
-                <input
-                    id='name_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
+            <SelectFormItem
+                label='Тип по Берджи'
+                id='bergey-type_field'
+                items={bergeyTypes}
+            />
 
-            <div className='strain-form__item'>
-                <label htmlFor='data_field' className='strain-form__label'>
-                    Дата получения
-                </label>
-                <input
-                    id='data_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
-
-            <div className='strain-form__item'>
-                <label htmlFor='index_field' className='strain-form__label'>
-                    Индекс штаммов
-                </label>
-                <input
-                    id='index_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
-
-            <div className='strain-form__item'>
-                <label htmlFor='source_field' className='strain-form__label'>
-                    Источник
-                </label>
-                <input
-                    id='source_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
-
-            <div className='strain-form__item'>
-                <label htmlFor='creator_field' className='strain-form__label'>
-                    Создатель
-                </label>
-                <input
-                    id='creator_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
-
-            <div className='strain-form__item'>
-                <label htmlFor='creator_field' className='strain-form__label'>
-                    Создатель
-                </label>
-                <input
-                    id='creator_field'
-                    type='text'
-                    className='strain-form__input form-input'
-                />
-            </div>
+            <TextFormItem label='Исхродный индекс' id='name_field' />
+            <TextFormItem label='Дата получения' id='data_field' />
+            <TextFormItem label='Индекс штаммов' id='index_field' />
+            <TextFormItem label='Источник' id='source_field' />
+            <TextFormItem label='Создатель' id='creator_field' />
         </form>
     );
 }
