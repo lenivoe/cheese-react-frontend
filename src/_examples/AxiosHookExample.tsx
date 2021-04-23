@@ -1,5 +1,5 @@
-import './App.css';
 import useAxios from 'axios-hooks';
+import { useState } from 'react';
 
 interface MenuItem {
     href: string;
@@ -17,28 +17,23 @@ interface MainMenuResponse {
 }
 
 export default function AxiosHookExample() {
-    const [{ data, loading, error }, execute] = useAxios<MainMenuResponse, any>(
-        {
-            url: 'localhost:8081',
-        },
-        {
-            ssr: false,
-        }
-    );
+    const [result, refetch] = useAxios<MainMenuResponse, any>({
+        url: 'localhost:8081',
+    });
 
-    if (loading) {
+    if (result.loading) {
         return <p>Loading...</p>;
     }
 
-    if (error) {
-        console.log(error);
+    if (result.error) {
+        console.log(result.error);
         return <p>Error!</p>;
     }
 
     return (
         <div style={{ marginLeft: '10px' }}>
-            <button onClick={() => execute()}>refetch</button>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+            <button onClick={() => refetch()}>refetch</button>
+            <pre>{JSON.stringify(result.data, null, 2)}</pre>
         </div>
     );
 }

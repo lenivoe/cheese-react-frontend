@@ -1,4 +1,4 @@
-import RusDatePicker from '../components/RusDatePicker';
+import RusDatePicker from '../components/utils/RusDatePicker';
 import { useSessionStorageState } from '../hooks/storage';
 
 function SessionStorageExample() {

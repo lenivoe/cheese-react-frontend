@@ -1,25 +1,56 @@
 export default interface Strain {
-    strainId?: number;
-    typeId: number;
+    id?: number; // nullable
+    type?: StrainType;
     name: string;
     collectionIndex: string;
-    dateReceiving: Date;
+    dateReceiving: string;
     source: string;
-    creator?: string;
-    dateAdded: Date;
+    creator?: string; // nullable
+    dateAdded: string;
     obtainingMethod: string;
 
-    properties: FacticalProperty[];
+    properties: Property[];
 }
 
-export interface FacticalProperty {
+export interface StrainType {
+    id: number;
+    name: string;
+    genus: Genus;
+}
+export interface Genus {
+    id: number;
+    name: string;
+}
+
+interface Property {
     propertyId: number;
+    propertyName: string;
     ungroupedParameters?: FacticalParameter[];
-    groups?: FacticalParameter[][];
+    groups?: Group[];
+}
+
+interface Group {
+    groupId: number;
+    parameters: FacticalParameter[];
 }
 
 export interface FacticalParameter {
-    facticalParameterId?: number;
-    formalParameterId: number;
+    formalParameter: FormalParameter;
+    groupId?: number;
+    id: number;
     value: string;
 }
+
+interface FormalParameter {
+    id: number;
+    isNote: boolean;
+    parameterDataType: ParamDataType;
+    value: string; // name
+}
+
+interface ParamDataType {
+    id: number;
+    name: DataType;
+}
+
+type DataType = 'String' | 'Number' | 'Time' | 'Date' | 'Boolean' | 'None';
