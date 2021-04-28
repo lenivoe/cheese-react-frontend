@@ -1,18 +1,17 @@
 import useAxios from 'axios-hooks';
 
-interface UseGetProps {
+interface GetRequestProps {
     url: string;
 }
 
-export function useGet<TResponse = any, TError = any>({ url }: UseGetProps) {
-    return useAxios<TResponse, TError>({ url: url }, { ssr: false });
+export function useGet<TResponse = any, TError = any>({ url }: GetRequestProps) {
+    return useAxios<TResponse, TError>({ url, method: 'GET' }, { ssr: false });
 }
 
-interface UsePostData {
-    url: string;
+interface PostRequestProps extends GetRequestProps {
     data: {};
 }
 
-export function usePost<TResponse = any, TError = any>({ url, data }: UsePostData) {
-    return useAxios<TResponse, TError>({ url: url }, { ssr: false });
+export function usePost<TResponse = any, TError = any>({ url, data }: PostRequestProps) {
+    return useAxios<TResponse, TError>({ url, data, method: 'POST' }, { ssr: false });
 }

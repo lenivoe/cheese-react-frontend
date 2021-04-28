@@ -1,12 +1,12 @@
 import RusDatePicker from '../components/utils/RusDatePicker';
-import { useSessionStorageState } from '../hooks/storage';
+import { useSessionStorage } from '../hooks/storage';
 
 function SessionStorageExample() {
-    const [dateStr, setDateStr] = useSessionStorageState(
+    const [dateStr, setDateStr] = useSessionStorage(
         'sessionStorage-date',
         new Date().toString()
     );
-    const [value, setValue] = useSessionStorageState('myValueInLocalStorage', 'sdsd');
+    const [value, setValue] = useSessionStorage('myValueInLocalStorage', 'sdsd');
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
