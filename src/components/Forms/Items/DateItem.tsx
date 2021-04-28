@@ -1,16 +1,18 @@
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { dateToIso } from '../../../utils/utils';
 import RusDatePicker from '../../utils/RusDatePicker';
 
-interface Props<STR extends string | undefined> {
+export interface DateItemProps<STR extends string | undefined> {
     name: STR;
     label: string;
     value: string;
     onChange: (value: string, fieldName: STR) => void;
 }
 
-export default function DateItem<STR extends string | undefined>(props: Props<STR>) {
+export default function DateItem<STR extends string | undefined>(
+    props: DateItemProps<STR>
+) {
     const [cssId] = useState(nanoid());
 
     return (

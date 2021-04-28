@@ -1,9 +1,9 @@
-interface Props {
+export interface HeaderProps {
     onMenuButtonClick: () => void;
     isMenuButtonActive: boolean;
 }
 
-export default function Header({ onMenuButtonClick, isMenuButtonActive }: Props) {
+export default function Header({ onMenuButtonClick, isMenuButtonActive }: HeaderProps) {
     const active = isMenuButtonActive ? ' active' : '';
 
     return (

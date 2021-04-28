@@ -1,14 +1,16 @@
 import { nanoid } from 'nanoid/non-secure';
 import { useState } from 'react';
 
-interface Props<STR extends string | undefined> {
+export interface TextItemProps<STR extends string | undefined> {
     name: STR;
     label: string;
     value: string;
     onChange: (value: string, fieldName: STR) => void;
 }
 
-export default function TextItem<STR extends string | undefined>(props: Props<STR>) {
+export default function TextItem<STR extends string | undefined>(
+    props: TextItemProps<STR>
+) {
     const [cssId] = useState(nanoid());
 
     return (

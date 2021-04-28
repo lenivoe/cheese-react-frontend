@@ -1,11 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { ButtonLink } from '../utils/ButtonLink';
+import { ObscureLink } from '../utils/ObscureLink';
 
 export interface MenuItemInfo {
     id: number;
     label: string;
-    linkTo: string;
+    url: string;
 }
 interface BlockMenuProps {
     items: MenuItemInfo[];
@@ -13,20 +13,20 @@ interface BlockMenuProps {
 }
 
 export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
-    const location = useLocation();
+    const location = useLocation(); // адрес текущей страницы
 
     // выделяет пункт меню в зависимости от текущего адреса страницы
     const activeItem = items.reduce<MenuItemInfo | undefined>((active, item) => {
-        const isMatch = location.pathname.startsWith(item.linkTo);
-        const isFound = isMatch && (!active || active.linkTo.length < item.linkTo.length);
+        const isMatch = location.pathname.startsWith(item.url);
+        const isFound = isMatch && (!active || active.url.length < item.url.length);
         return isFound ? item : active;
     }, undefined);
 
     return (
         <div className='main-content__menu'>
             <div className='menu'>
-                {items.map(({ id, label, linkTo }) => (
-                    <ButtonLink to={linkTo} key={id}>
+                {items.map(({ id, label, url }) => (
+                    <ObscureLink to={url} key={id}>
                         <MenuItem
                             label={label}
                             isActive={id === activeItem?.id}
@@ -35,7 +35,7 @@ export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
                                 (() => onChoose(items.find((item) => item.id === id)!))
                             }
                         />
-                    </ButtonLink>
+                    </ObscureLink>
                 ))}
             </div>
         </div>

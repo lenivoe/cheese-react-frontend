@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 import { useState } from 'react';
 
-interface Props {
+export interface SelectItemProps {
     name?: string;
     label: string;
     items: { text: string; value: string }[];
@@ -9,7 +9,7 @@ interface Props {
     onSelectChange: (sender: HTMLSelectElement) => void;
 }
 
-export default function SelectItem(props: Props) {
+export default function SelectItem(props: SelectItemProps) {
     const [cssId] = useState(nanoid());
 
     return (

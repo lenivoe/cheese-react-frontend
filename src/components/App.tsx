@@ -1,10 +1,10 @@
 import './App.scss';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
-import Header from './Header/Header';
-import BlockMenu, { MenuItemInfo } from './MainMenu/BlockMenu';
-import StrainSavingForm from './MainMenu/StrainSavingForm';
-import MicroorganismsCatalog from './MicroorganismsCatalog/MicroorganismsCatalog';
+import Header from './Header';
+import BlockMenu, { MenuItemInfo } from './Forms/BlockMenu';
+import StrainSavingForm from './Forms/StrainSavingForm';
+import MicroorganismsCatalog from './Forms/MicroorganismsCatalog';
 
 const menuLabels = [
     'Каталог микроорганизмов',
@@ -20,7 +20,7 @@ const menuButtonsInfo: MenuItemInfo[] = [
     '/strain_search',
     '/edit_properties',
     '/edit_strain/2',
-].map((linkTo, i) => ({ id: i, label: menuLabels[i], linkTo }));
+].map((url, i) => ({ id: i, label: menuLabels[i], url }));
 
 const routesInfo: [string, React.ComponentType | undefined][] = [
     ['/', MicroorganismsCatalog],
