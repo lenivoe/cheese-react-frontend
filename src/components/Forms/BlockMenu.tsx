@@ -13,11 +13,11 @@ interface BlockMenuProps {
 }
 
 export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
-    const location = useLocation(); // адрес текущей страницы
+    const { pathname } = useLocation(); // адрес текущей страницы
 
     // выделяет пункт меню в зависимости от текущего адреса страницы
     const activeItem = items.reduce<MenuItemInfo | undefined>((active, item) => {
-        const isMatch = location.pathname.startsWith(item.url);
+        const isMatch = pathname.startsWith(item.url);
         const isFound = isMatch && (!active || active.url.length < item.url.length);
         return isFound ? item : active;
     }, undefined);

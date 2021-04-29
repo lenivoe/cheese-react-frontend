@@ -7,41 +7,6 @@ import SelectItem from './Items/SelectItem';
 import TextItem from './Items/TextItem';
 import DateItem from './Items/DateItem';
 
-async function postStain() {
-    // const axiosInst = axios.create({ baseURL: axios.defaults.baseURL + '/strain' });
-    // const strain = {
-    //     type: {
-    //         id: 1,
-    //     },
-    //     name: 'Lactococcus lactis С9-18-2',
-    //     collectionIndex: 'ИД-765',
-    //     dateReceiving: '1981-12-19T17:00:00.000Z',
-    //     source: 'Получен из штамма L.lactis 174',
-    //     obtainingMethod: 'Экспериментальная селекция',
-    //     creator: 'Крузенштерн И.Ф.',
-    //     dateAdded: '2021-04-11T20:49:10.990Z',
-    //     properties: [
-    //         {
-    //             propertyId: 1,
-    //             ungroupedParameters: [{ formalParameter: { id: 1 }, value: '44' }],
-    //             groups: [
-    //                 {
-    //                     groupId: 77,
-    //                     parameters: [
-    //                         { formalParameter: { id: 2 }, value: '100' },
-    //                         { formalParameter: { id: 3 }, value: '0.9' },
-    //                     ],
-    //                 },
-    //             ],
-    //         },
-    //     ],
-    // };
-    // const saveStrain = await axiosInst.post('/save', strain).catch((reason) => {
-    //     console.warn('reason:', reason);
-    // });
-    // console.log('save:', saveStrain);
-}
-
 interface Props {
     strainId?: number;
 }
