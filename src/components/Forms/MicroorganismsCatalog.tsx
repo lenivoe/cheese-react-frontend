@@ -1,105 +1,106 @@
 import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
-import {
-    getAllGenera,
-    getAllStrains,
-    getAllStrainTypes as getAllTypes,
-} from '../../utils/data_fetch';
-import RequestError from '../../utils/request_error';
+import { Switch, Route, useRouteMatch, useParams } from 'react-router-dom';
+import { getAllGenera, getAllStrains, getAllStrainTypes } from '../../utils/data_fetch';
 import Strain, { Genus, StrainType } from '../../models/strain/strain';
+import { ObscureLink } from '../utils/ObscureLink';
+import { useAsync } from 'react-async';
+import { join } from 'path';
 
-interface State {
-    requestError?: RequestError;
-    isLoading: boolean;
+const fetchData = () =>
+    Promise.all([getAllStrains(), getAllStrainTypes(), getAllGenera()]);
 
-    strainList: Strain[];
-    typeList: StrainType[];
-    genusList: Genus[];
+export default function MicroorganismsCatalog() {
+    const { path } = useRouteMatch();
+    const { data, error, isPending } = useAsync(fetchData);
+
+    if (isPending) {
+        return <p>Загрузка данных...</p>;
+    }
+    if (error) {
+        return <p>`Ошибка при получении данных: ${error.message}`</p>;
+    }
+
+    const [strainList, typeList, genusList] = data!;
+
+    return (
+        <Switch>
+            <Route exact path={path}>
+                <GenusList genusList={genusList} />
+            </Route>
+            <Route exact path={join(path, ':genusId')}>
+                <TypeList typeList={typeList} />
+            </Route>
+            <Route exact path={join(path, ':genusId/:typeId')}>
+                <StrainList strainList={strainList} />
+            </Route>
+        </Switch>
+    );
 }
 
-export default class MicroorganismsCatalog extends React.Component<{}, State> {
-    constructor(props: {}) {
-        super(props);
-        this.state = { isLoading: false, strainList: [], typeList: [], genusList: [] };
-    }
-
-    async componentDidMount() {
-        this.setState({ isLoading: true });
-        try {
-            const [strainList, typeList, genusList] = await Promise.all([
-                getAllStrains(),
-                getAllTypes(),
-                getAllGenera(),
-            ]);
-            this.setState({ strainList, typeList, genusList });
-        } catch (error) {
-            this.setState({ requestError: error });
-        }
-        this.setState({ isLoading: false });
-    }
-
-    render() {
-        const { isLoading, requestError } = this.state;
-
-        if (isLoading) {
-            return <p>Загрузка данных...</p>;
-        }
-        if (requestError) {
-            return `Ошибка при получении данных: ${requestError.message}`;
-        }
-
-        const { strainList, typeList, genusList } = this.state;
-
-        return (
-            <div>
-                catalog
-                <Switch>
-                    <Route path='/catalog'>
-                        <GenusList genusList={genusList} />
-                    </Route>
-
-                    {strainList.map((strain) => {
-                        return (
-                            <Route key={strain.id} path={`/${strain.type?.genus.name}`}>
-                                <TypeList />
-                            </Route>
-                        );
-                    })}
-                </Switch>
-            </div>
-        );
-
-        return (
-            <div>
-                штаммы
-                <pre>{JSON.stringify(strainList, null, 2)}</pre>
-                виды
-                <pre>{JSON.stringify(typeList, null, 2)}</pre>
-                рода
-                <pre>{JSON.stringify(genusList, null, 2)}</pre>
-            </div>
-        );
-    }
+interface UrlParams {
+    genusIdStr?: string;
+    typeIdStr?: string;
 }
 
 function GenusList({ genusList }: { genusList: Genus[] }) {
+    const { url } = useRouteMatch();
     return (
         <nav>
+            <h1>GENUS LIST</h1>
             <ul>
-                {genusList.map((genus) => {
-                    return (
-                        <li>
-                            <Link className='disabled-a' to={`/${genus.name}`}>
-                                {genus.name}
-                            </Link>
-                        </li>
-                    );
-                })}
+                {genusList.map((genus) => (
+                    <li key={genus.id}>
+                        <ObscureLink to={join(url, genus.id.toString())}>
+                            {genus.name}
+                        </ObscureLink>
+                    </li>
+                ))}
             </ul>
         </nav>
     );
 }
 
-function TypeList() {
-    return <p>{'pop'}</p>;
+function TypeList({ typeList }: { typeList: StrainType[] }) {
+    const { url } = useRouteMatch();
+    const { genusIdStr } = useParams<UrlParams>();
+
+    return (
+        <nav>
+            <h1>TYPE LIST</h1>
+            <ul>
+                {typeList
+                    .filter((type) => type.genus.id.toString() === genusIdStr)
+                    .map((type) => (
+                        <li key={type.id}>
+                            <ObscureLink to={join(url, type.id.toString())}>
+                                {type.name}
+                            </ObscureLink>
+                        </li>
+                    ))}
+            </ul>
+        </nav>
+    );
+}
+
+function StrainList({ strainList }: { strainList: Strain[] }) {
+    const { typeIdStr } = useParams<UrlParams>();
+
+    return (
+        <nav>
+            <h1>SRAIN LIST</h1>
+            <ul>
+                {strainList
+                    .filter((strain) => strain.type?.id.toString() === typeIdStr)
+                    .map((strain) => (
+                        <li key={strain.id}>
+                            <ObscureLink
+                                to={join('/strain', strain.id!.toString(), 'edit')}
+                            >
+                                {strain.name}
+                            </ObscureLink>
+                        </li>
+                    ))}
+            </ul>
+        </nav>
+    );
 }

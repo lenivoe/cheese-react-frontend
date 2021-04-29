@@ -1,6 +1,6 @@
 import './App.scss';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import React from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
 import Header from './Header';
 import BlockMenu, { MenuItemInfo } from './Forms/BlockMenu';
 import StrainSavingForm from './Forms/StrainSavingForm';
@@ -15,64 +15,43 @@ const menuLabels = [
 ];
 
 const menuButtonsInfo: MenuItemInfo[] = [
-    '/',
-    '/add_strain',
-    '/strain_search',
-    '/edit_properties',
-    '/edit_strain/2',
+    '/catalog',
+    '/strain/add',
+    '/strain/search',
+    '/properties',
+    '/strain/2/edit',
 ].map((url, i) => ({ id: i, label: menuLabels[i], url }));
 
-const routesInfo: [string, React.ComponentType | undefined][] = [
-    ['/', MicroorganismsCatalog],
-    ['/add_strain', StrainSavingForm],
-    ['/strain_search', undefined],
-    ['/edit_properties', undefined],
-    ['/edit_strain/:id', StrainSavingForm],
-];
+export default function App() {
+    const [isBlockMenuActive, setIsBlockMenuActive] = useState(true);
 
-interface State {
-    isBlockMenuActive: boolean;
-}
+    const onMenuButtonClick = useCallback(
+        () => setIsBlockMenuActive((isActive) => !isActive),
+        [isBlockMenuActive]
+    );
 
-export default class App extends React.Component<{}, State> {
-    constructor(props: {}) {
-        super(props);
-        this.state = { isBlockMenuActive: true };
-    }
+    return (
+        <BrowserRouter>
+            <Header
+                onMenuButtonClick={onMenuButtonClick}
+                isMenuButtonActive={isBlockMenuActive}
+            />
 
-    render() {
-        const { isBlockMenuActive } = this.state;
+            <main className='main container'>
+                <div className='main__content main-content'>
+                    {isBlockMenuActive && <BlockMenu items={menuButtonsInfo} />}
 
-        return (
-            <Router>
-                <Header
-                    onMenuButtonClick={this.onMenuButtonClick}
-                    isMenuButtonActive={this.state.isBlockMenuActive}
-                />
+                    <Switch>
+                        <Route path='/catalog' component={MicroorganismsCatalog} />
+                        <Route path='/strain/add' component={StrainSavingForm} />
+                        <Route path='/strain/search' component={undefined} />
+                        <Route path='/properties' component={undefined} />
+                        <Route path='/strain/:id/edit' component={StrainSavingForm} />
 
-                <main className='main container'>
-                    <div className='main__content main-content'>
-                        {isBlockMenuActive && <BlockMenu items={menuButtonsInfo} />}
-
-                        <Switch>
-                            {routesInfo.map(([path, component], i) => (
-                                <Route
-                                    key={i}
-                                    exact={path === '/'}
-                                    path={path}
-                                    component={component}
-                                />
-                            ))}
-                        </Switch>
-                    </div>
-                </main>
-            </Router>
-        );
-    }
-
-    private onMenuButtonClick = () => {
-        this.setState((prevState, _) => ({
-            isBlockMenuActive: !prevState.isBlockMenuActive,
-        }));
-    };
+                        <Redirect from='/' to='/catalog' />
+                    </Switch>
+                </div>
+            </main>
+        </BrowserRouter>
+    );
 }
