@@ -1,0 +1,20 @@
+.main {
+  background-color: $fon-color;
+  &__content {
+    display: flex;
+  }
+}
+
+.main-content{
+  &__menu{
+    width: 33%;
+  }
+
+  &__data{
+    padding-top: 30px;
+    min-height: 93vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

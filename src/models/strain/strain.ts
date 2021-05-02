@@ -22,6 +22,7 @@ export interface Genus {
     name: string;
 }
 
+
 interface Property {
     propertyId: number;
     propertyName: string;

@@ -1,0 +1,80 @@
+// Reset data
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+q {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// USER VARIABLES SECTION
+
+// Colors
+$fon-color: #f0f0f0;
+$text-color: #000000;
+$block-color: #e4e4e4;
+$input-color: #d8d8d8;
+$item-fon-color: #e2e2e2;
+$item-fon-hover-color: #b7b7b7;
+
+// Sizes
+$fontsize: 18px;
+$lineheight: 1.5;
+$userfont: roboto-oh5, sans-serif; // User Font Family
+
+// IMPORT SECTION
+
+@import 'node_modules/bootstrap/scss/bootstrap-reboot.scss'; // Bootstrap Reboot collection
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints.scss'; // Bootstrap Breakpoints mixin
+
+// FONTS LOAD SECTION
+
+@mixin font($fname, $fstyle, $fweight, $furl) {
+  @font-face {
+    font-family: $fname;
+    font-style: $fstyle;
+    font-weight: $fweight;
+    src: url($furl) format('woff2');
+  }
+}
+
+@include font('roboto-oh5', normal, 400, '../../fonts/roboto-regular-webfont.woff2')
+@include font('roboto-oh5', italic, 400, '../../fonts/roboto-italic-webfont.woff2')
+@include font('roboto-oh5', normal, 700, '../../fonts/roboto-bold-webfont.woff2')
+@include font('roboto-oh5', italic, 700, '../../fonts/roboto-bolditalic-webfont.woff2')

@@ -1,0 +1,74 @@
+.strain-adding {
+  display: flex;
+  position: relative;
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    font-size: 18px;
+    position: fixed;
+    right: 8%;
+
+    .form-button:first-child {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+
+@media (max-width: 1220px) {
+  .strain-adding {
+    &__buttons {
+      font-size: 18px;
+      right: 6%;
+    }
+  }
+}
+
+@media (max-width: 1150px) {
+  .strain-adding {
+    &__buttons {
+      font-size: 18px;
+      right: 4%;
+    }
+  }
+}
+@media (max-width: 1024px) {
+  .strain-adding {
+    &__buttons {
+      font-size: 18px;
+      right: 1%;
+    }
+  }
+}
+
+.strain-form {
+
+  &__item{
+    width: 550px;
+  }
+
+  &__input {
+    border-radius: 7px;
+  }
+
+  &__label {
+    text-align: center;
+  }
+}
+
+.property {
+  margin-top: 25px;
+
+  &__title {
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  &__parameter{
+    width: 450px;
+  }
+}

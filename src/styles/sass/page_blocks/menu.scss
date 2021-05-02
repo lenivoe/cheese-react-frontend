@@ -1,0 +1,26 @@
+.menu {
+  font-weight: 500;
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  background-color: $block-color;
+
+  &__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $item-fon-hover-color;
+    }
+
+    transition: .1s linear;
+  }
+}
+
+.item-text {
+  text-align: center;
+}

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface HeaderProps {
     onMenuButtonClick: () => void;
     isMenuButtonActive: boolean;

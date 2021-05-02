@@ -1,0 +1,67 @@
+select {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input,
+button {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.form {
+
+  &__field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 450px;
+  }
+
+  &-label {
+    width: 33%;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  &-input {
+    width: 67%;
+    border-radius: 7px;
+    background-color: $input-color;
+    margin-left: 5px;
+    padding: 5px;
+  }
+
+  &-button {
+    border-radius: 7px;
+    background-color: $item-fon-color;
+    padding: 7px 15px 7px 15px;
+
+    &:hover {
+      background-color: $item-fon-hover-color;
+    }
+
+    transition: .1s linear;
+  }
+
+  &--position-block-center {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding-bottom: 15px;
+  }
+
+  &--flex {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: right;
+  }
+}

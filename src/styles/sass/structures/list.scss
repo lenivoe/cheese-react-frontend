@@ -1,0 +1,32 @@
+.list {
+  width: 100%;
+  height: 100%;
+
+  &-title {
+    text-align: center;
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  &-data {
+    height: 88%;
+    overflow: auto;
+    background-color: $block-color;
+  }
+
+  &-item {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $item-fon-hover-color;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

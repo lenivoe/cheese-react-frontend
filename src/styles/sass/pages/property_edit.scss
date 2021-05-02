@@ -1,0 +1,65 @@
+.property-edit {
+
+  &--list {
+    max-height: 350px;
+    height: 350px;
+    max-width: 200px;
+    width: 200px;
+    margin-right: 30px;
+  }
+
+  &__form-block {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+}
+
+.info-block {
+  display: flex;
+}
+
+.info-title {
+  text-align: center;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.form-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 200px;
+  flex-wrap: wrap;
+  max-height: 350px;
+  height: 350px;
+
+  &__button {
+    padding: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $item-fon-hover-color;
+    }
+  }
+}
+
+.form-block {
+  text-align: center;
+  width: 55%;
+
+  &__title {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  &__item{
+    width: 100%;
+  }
+}
+
