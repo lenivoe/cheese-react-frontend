@@ -1,19 +1,20 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { ObscureLink } from '../utils/ObscureLink';
+import {useLocation} from 'react-router-dom';
+import {ObscureLink} from '../utils/ObscureLink';
 
 export interface MenuItemInfo {
     id: number;
     label: string;
     url: string;
 }
+
 interface BlockMenuProps {
     items: MenuItemInfo[];
     onChoose?: (item: MenuItemInfo) => void;
 }
 
-export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
-    const { pathname } = useLocation(); // адрес текущей страницы
+export default function BlockMenu({items, onChoose}: BlockMenuProps) {
+    const {pathname} = useLocation(); // адрес текущей страницы
 
     // выделяет пункт меню в зависимости от текущего адреса страницы
     const activeItem = items.reduce<MenuItemInfo | undefined>((active, item) => {
@@ -23,21 +24,19 @@ export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
     }, undefined);
 
     return (
-        <div className='main-content__menu'>
-            <div className='menu'>
-                {items.map(({ id, label, url }) => (
-                    <ObscureLink to={url} key={id}>
-                        <MenuItem
-                            label={label}
-                            isActive={id === activeItem?.id}
-                            onClick={
-                                onChoose &&
-                                (() => onChoose(items.find((item) => item.id === id)!))
-                            }
-                        />
-                    </ObscureLink>
-                ))}
-            </div>
+        <div className='menu'>
+            {items.map(({id, label, url}) => (
+                <ObscureLink to={url} key={id}>
+                    <MenuItem
+                        label={label}
+                        isActive={id === activeItem?.id}
+                        onClick={
+                            onChoose &&
+                            (() => onChoose(items.find((item) => item.id === id)!))
+                        }
+                    />
+                </ObscureLink>
+            ))}
         </div>
     );
 }
@@ -48,7 +47,7 @@ interface MenuItemProps {
     onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
-function MenuItem({ label, isActive, onClick }: MenuItemProps) {
+function MenuItem({label, isActive, onClick}: MenuItemProps) {
     const active = isActive ? ' active' : '';
 
     return (

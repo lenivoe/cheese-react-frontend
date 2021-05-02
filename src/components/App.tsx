@@ -1,8 +1,8 @@
 import './App.scss';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import React, { useCallback, useState } from 'react';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import React, {useCallback, useState} from 'react';
 import Header from './Header';
-import BlockMenu, { MenuItemInfo } from './Forms/BlockMenu';
+import BlockMenu, {MenuItemInfo} from './Forms/BlockMenu';
 import StrainSavingForm from './Forms/StrainSavingForm';
 import MicroorganismsCatalog from './Forms/MicroorganismsCatalog';
 
@@ -20,7 +20,7 @@ const menuButtonsInfo: MenuItemInfo[] = [
     '/strain/search',
     '/properties',
     '/strain/2/edit',
-].map((url, i) => ({ id: i, label: menuLabels[i], url }));
+].map((url, i) => ({id: i, label: menuLabels[i], url}));
 
 export default function App() {
     const [isBlockMenuActive, setIsBlockMenuActive] = useState(true);
@@ -39,17 +39,21 @@ export default function App() {
 
             <main className='main container'>
                 <div className='main__content main-content'>
-                    {isBlockMenuActive && <BlockMenu items={menuButtonsInfo} />}
+                    <div className='main-content__menu'>
+                        {isBlockMenuActive && <BlockMenu items={menuButtonsInfo}/>}
+                    </div>
 
-                    <Switch>
-                        <Route path='/catalog' component={MicroorganismsCatalog} />
-                        <Route path='/strain/add' component={StrainSavingForm} />
-                        <Route path='/strain/search' component={undefined} />
-                        <Route path='/properties' component={undefined} />
-                        <Route path='/strain/:id/edit' component={StrainSavingForm} />
+                    <div className="main-content__data">
+                        <Switch>
+                            <Route path='/catalog' component={MicroorganismsCatalog}/>
+                            <Route path='/strain/add' component={StrainSavingForm}/>
+                            <Route path='/strain/search' component={undefined}/>
+                            <Route path='/properties' component={undefined}/>
+                            <Route path='/strain/:id/edit' component={StrainSavingForm}/>
 
-                        <Redirect from='/' to='/catalog' />
-                    </Switch>
+                            <Redirect from='/' to='/catalog'/>
+                        </Switch>
+                    </div>
                 </div>
             </main>
         </BrowserRouter>

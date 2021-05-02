@@ -1,17 +1,17 @@
 import React from 'react';
-import { Switch, Route, useRouteMatch, useParams } from 'react-router-dom';
-import { getAllGenera, getAllStrains, getAllStrainTypes } from '../../utils/data_fetch';
-import Strain, { Genus, StrainType } from '../../models/strain/strain';
-import { ObscureLink } from '../utils/ObscureLink';
-import { useAsync } from 'react-async';
-import { join } from 'path';
+import {Switch, Route, useRouteMatch, useParams} from 'react-router-dom';
+import {getAllGenera, getAllStrains, getAllStrainTypes} from '../../utils/data_fetch';
+import Strain, {Genus, StrainType} from '../../models/strain/strain';
+import {ObscureLink} from '../utils/ObscureLink';
+import {useAsync} from 'react-async';
+import {join} from 'path';
 
 const fetchData = () =>
     Promise.all([getAllStrains(), getAllStrainTypes(), getAllGenera()]);
 
 export default function MicroorganismsCatalog() {
-    const { path } = useRouteMatch();
-    const { data, error, isPending } = useAsync(fetchData);
+    const {path} = useRouteMatch();
+    const {data, error, isPending} = useAsync(fetchData);
 
     if (isPending) {
         return <p>Загрузка данных...</p>;
@@ -25,13 +25,13 @@ export default function MicroorganismsCatalog() {
     return (
         <Switch>
             <Route exact path={path}>
-                <GenusList genusList={genusList} />
+                <GenusList genusList={genusList}/>
             </Route>
             <Route exact path={join(path, ':genusId')}>
-                <TypeList typeList={typeList} />
+                <TypeList typeList={typeList}/>
             </Route>
             <Route exact path={join(path, ':genusId/:typeId')}>
-                <StrainList strainList={strainList} />
+                <StrainList strainList={strainList}/>
             </Route>
         </Switch>
     );
@@ -42,27 +42,24 @@ interface UrlParams {
     typeIdStr?: string;
 }
 
-function GenusList({ genusList }: { genusList: Genus[] }) {
-    const { url } = useRouteMatch();
+function GenusList({genusList}: { genusList: Genus[] }) {
+    const {url} = useRouteMatch();
     return (
-        <nav>
-            <h1>GENUS LIST</h1>
-            <ul>
-                {genusList.map((genus) => (
-                    <li key={genus.id}>
-                        <ObscureLink to={join(url, genus.id.toString())}>
-                            {genus.name}
-                        </ObscureLink>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+        <ul className="genusList">
+            {genusList.map((genus) => (
+                <li className = "genusList__item" key={genus.id}>
+                    <ObscureLink to={join(url, genus.id.toString())}>
+                        {genus.name}
+                    </ObscureLink>
+                </li>
+            ))}
+        </ul>
     );
 }
 
-function TypeList({ typeList }: { typeList: StrainType[] }) {
-    const { url } = useRouteMatch();
-    const { genusIdStr } = useParams<UrlParams>();
+function TypeList({typeList}: { typeList: StrainType[] }) {
+    const {url} = useRouteMatch();
+    const {genusIdStr} = useParams<UrlParams>();
 
     return (
         <nav>
@@ -82,8 +79,8 @@ function TypeList({ typeList }: { typeList: StrainType[] }) {
     );
 }
 
-function StrainList({ strainList }: { strainList: Strain[] }) {
-    const { typeIdStr } = useParams<UrlParams>();
+function StrainList({strainList}: { strainList: Strain[] }) {
+    const {typeIdStr} = useParams<UrlParams>();
 
     return (
         <nav>
