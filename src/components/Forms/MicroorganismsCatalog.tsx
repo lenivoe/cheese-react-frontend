@@ -1,8 +1,7 @@
 import React from 'react';
-import {Switch, Route, useRouteMatch, useParams} from 'react-router-dom';
+import {Switch, Route, useRouteMatch, useParams, Link} from 'react-router-dom';
 import {getAllGenera, getAllStrains, getAllStrainTypes} from '../../utils/data_fetch';
 import Strain, {Genus, StrainType} from '../../models/strain/strain';
-import {ObscureLink} from '../utils/ObscureLink';
 import {useAsync} from 'react-async';
 import {join} from 'path';
 
@@ -44,14 +43,16 @@ interface UrlParams {
 
 function GenusList({genusList}: { genusList: Genus[] }) {
     const {url} = useRouteMatch();
+    const {length: listNumber} = genusList;
     return (
         <div className="genus-list-block">
             <ul className="genus-list">
                 {genusList.map((genus) => (
-                    <li className="genus-list__item" key={genus.id}>
-                        <ObscureLink className="genus-list__link" to={join(url, genus.id.toString())}>
-                            {genus.name}
-                        </ObscureLink>
+                    <li className="genus-list__item genus-item" key={genus.id}>
+                        <Link className="genus-list__link genus-link" to={join(url, genus.id.toString())}>
+                            <span className="genus-link__name genus-name">{genus.name}</span>
+                            <span className="genus-link__number genus-strains-number">{listNumber}</span>
+                        </Link>
                     </li>
                 ))}
             </ul>
@@ -65,15 +66,14 @@ function TypeList({typeList}: { typeList: StrainType[] }) {
 
     return (
         <nav>
-            <h1>TYPE LIST</h1>
             <ul>
                 {typeList
                     .filter((type) => type.genus.id.toString() === genusIdStr)
                     .map((type) => (
                         <li key={type.id}>
-                            <ObscureLink to={join(url, type.id.toString())}>
+                            <Link to={join(url, type.id.toString())}>
                                 {type.name}
-                            </ObscureLink>
+                            </Link>
                         </li>
                     ))}
             </ul>
@@ -86,17 +86,16 @@ function StrainList({strainList}: { strainList: Strain[] }) {
 
     return (
         <nav>
-            <h1>SRAIN LIST</h1>
             <ul>
                 {strainList
                     .filter((strain) => strain.type?.id.toString() === typeIdStr)
                     .map((strain) => (
                         <li key={strain.id}>
-                            <ObscureLink
+                            <Link
                                 to={join('/strain', strain.id!.toString(), 'edit')}
                             >
                                 {strain.name}
-                            </ObscureLink>
+                            </Link>
                         </li>
                     ))}
             </ul>
