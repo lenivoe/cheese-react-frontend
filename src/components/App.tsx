@@ -39,9 +39,7 @@ export default function App() {
 
             <main className='main container'>
                 <div className='main__content main-content'>
-                    <div className='main-content__menu'>
-                        {isBlockMenuActive && <BlockMenu items={menuButtonsInfo}/>}
-                    </div>
+                    {isBlockMenuActive && <BlockMenu items={menuButtonsInfo}/>}
 
                     <div className="main-content__data">
                         <Switch>
@@ -50,7 +48,6 @@ export default function App() {
                             <Route path='/strain/search' component={undefined}/>
                             <Route path='/properties' component={undefined}/>
                             <Route path='/strain/:id/edit' component={StrainSavingForm}/>
-
                             <Redirect from='/' to='/catalog'/>
                         </Switch>
                     </div>

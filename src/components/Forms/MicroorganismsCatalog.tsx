@@ -45,15 +45,17 @@ interface UrlParams {
 function GenusList({genusList}: { genusList: Genus[] }) {
     const {url} = useRouteMatch();
     return (
-        <ul className="genusList">
-            {genusList.map((genus) => (
-                <li className = "genusList__item" key={genus.id}>
-                    <ObscureLink to={join(url, genus.id.toString())}>
-                        {genus.name}
-                    </ObscureLink>
-                </li>
-            ))}
-        </ul>
+        <div className="genus-list-block">
+            <ul className="genus-list">
+                {genusList.map((genus) => (
+                    <li className="genus-list__item" key={genus.id}>
+                        <ObscureLink className="genus-list__link" to={join(url, genus.id.toString())}>
+                            {genus.name}
+                        </ObscureLink>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 }
 

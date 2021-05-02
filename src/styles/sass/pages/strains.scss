@@ -2,10 +2,19 @@
   width: 700px;
 }
 
-.genusList {
+.genus-list {
   display: flex;
-  &__item {
 
+  &__item {
   }
 
+  &__link{
+    padding: 10px 20px;
+    background-color: $block-color;
+    transition: all .2s linear;
+    color: $text-color;
+    &:hover{
+      background-color: $item-fon-hover-color;
+    }
+  }
 }

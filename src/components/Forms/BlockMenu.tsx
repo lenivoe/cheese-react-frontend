@@ -24,19 +24,21 @@ export default function BlockMenu({items, onChoose}: BlockMenuProps) {
     }, undefined);
 
     return (
-        <div className='menu'>
-            {items.map(({id, label, url}) => (
-                <ObscureLink to={url} key={id}>
-                    <MenuItem
-                        label={label}
-                        isActive={id === activeItem?.id}
-                        onClick={
-                            onChoose &&
-                            (() => onChoose(items.find((item) => item.id === id)!))
-                        }
-                    />
-                </ObscureLink>
-            ))}
+        <div className="main-content__menu">
+            <div className='menu'>
+                {items.map(({id, label, url}) => (
+                    <ObscureLink to={url} key={id}>
+                        <MenuItem
+                            label={label}
+                            isActive={id === activeItem?.id}
+                            onClick={
+                                onChoose &&
+                                (() => onChoose(items.find((item) => item.id === id)!))
+                            }
+                        />
+                    </ObscureLink>
+                ))}
+            </div>
         </div>
     );
 }
