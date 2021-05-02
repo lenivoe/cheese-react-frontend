@@ -7,17 +7,18 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  align-items: stretch;
 
   &__item {
     width: 300px;
-    min-height: 80px;
-    margin-bottom: 30px;
   }
 }
 
 .genus {
 
   &-item {
+    min-height: 90px;
+    margin-bottom: 30px;
   }
 
   &-link {
