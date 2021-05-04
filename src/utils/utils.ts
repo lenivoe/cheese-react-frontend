@@ -4,6 +4,6 @@ export function delay(ms: number) {
     });
 }
 
-export function dateToIso(date: Date) {
-    return date.toISOString().split('T')[0];
+export function dateToIso(date?: Date) {
+    return (date ?? new Date()).toISOString().split('T')[0] ?? '';
 }
