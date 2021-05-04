@@ -47,7 +47,10 @@ export default function App() {
                             <Route path='/strain/add' component={StrainSavingForm} />
                             <Route path='/strain/search' component={undefined} />
                             <Route path='/properties' component={undefined} />
-                            <Route path='/strain/:id/edit' component={StrainSavingForm} />
+                            <Route
+                                path='/strain/:strainId/edit'
+                                component={StrainSavingForm}
+                            />
                             <Redirect from='/' to='/catalog' />
                         </Switch>
                     </div>
