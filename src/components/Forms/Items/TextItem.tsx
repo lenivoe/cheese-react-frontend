@@ -1,4 +1,4 @@
-import { FieldHookConfig, useField } from 'formik';
+import { useField } from 'formik';
 import { nanoid } from 'nanoid/non-secure';
 import { useState } from 'react';
 import FormItemProps from './FormItemProps';
