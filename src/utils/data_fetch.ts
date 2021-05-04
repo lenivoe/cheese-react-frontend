@@ -33,6 +33,16 @@ export async function getAllStrainTypes(timeout: number = defaultTimeout) {
     return response.data;
 }
 
+export async function getStrainTypeByGenus(genusId:number, timeout: number = defaultTimeout) {
+    const response = await axios.get<StrainType[]>(`/strain-genus/` + genusId + `/types`, getConfig(timeout));
+    return response.data;
+}
+
+export async function getStrainsByType(typeId:number, timeout: number = defaultTimeout) {
+    const response = await axios.get<StrainType[]>(`/strain-genus/` + typeId + `/types`, getConfig(timeout));
+    return response.data;
+}
+
 export async function getAllPropertiesWithParameters(timeout: number = defaultTimeout) {
     const response = await axios.get<StrainType[]>(
         `/property/with_parameters`,
