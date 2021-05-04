@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProps } from './FormItemProps';
+import { StyleProps } from '../FormItemProps';
 
 export default function withStyle<P extends StyleProps>(
     Component: React.ComponentType<P>,

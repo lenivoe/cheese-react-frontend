@@ -12,7 +12,7 @@ export default function SelectItem({
     ...props
 }: { placeholder?: string } & FormItemProps) {
     const [cssId] = useState(nanoid());
-    const [field, meta] = useField(props);
+    const [field] = useField(props);
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -25,7 +25,6 @@ export default function SelectItem({
                 </option>
                 {props.children}
             </select>
-            {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
         </div>
     );
 }

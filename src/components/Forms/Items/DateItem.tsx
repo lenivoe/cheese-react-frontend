@@ -14,7 +14,7 @@ export default function DateItem({
 }: FormItemProps) {
     const [cssId] = useState(nanoid());
     const { setFieldValue } = useFormikContext();
-    const [{ value, onChange: _, ...field }, meta] = useField(props);
+    const [{ value, onChange: _, ...field }] = useField(props);
 
     const date = value ? new Date(value) : new Date();
 
@@ -32,7 +32,6 @@ export default function DateItem({
                 }
                 {...field}
             />
-            {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
         </div>
     );
 }

@@ -11,7 +11,7 @@ export default function TextItem({
     ...props
 }: FormItemProps) {
     const [cssId] = useState(nanoid());
-    const [field, meta] = useField(props);
+    const [field] = useField(props);
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -25,7 +25,6 @@ export default function TextItem({
                 placeholder={props.placeholder}
                 type={props.type}
             />
-            {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
         </div>
     );
 }
