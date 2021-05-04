@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid/non-secure';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useField, useFormikContext } from 'formik';
 import RusDatePicker from '../../utils/RusDatePicker';
 import { dateToIso } from '../../../utils/utils';

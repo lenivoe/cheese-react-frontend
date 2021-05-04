@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface PropertyItemProps {
     title: string;
     children: React.ReactNode;

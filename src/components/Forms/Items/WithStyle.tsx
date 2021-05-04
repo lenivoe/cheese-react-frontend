@@ -1,3 +1,4 @@
+import React from 'react';
 import { StyleProps } from './FormItemProps';
 
 export default function withStyle<P extends StyleProps>(
