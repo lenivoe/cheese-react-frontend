@@ -1,178 +1,110 @@
-import React from 'react';
-import Strain, { FacticalParameter, Genus, StrainType } from '../../models/strain/strain';
-import RequestError from '../../utils/request_error';
+import React, { useCallback } from 'react';
+import { useAsync } from 'react-async';
+import { useParams } from 'react-router-dom';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 import { getAllGenera, getAllStrainTypes, getStrain } from '../../utils/data_fetch';
-import PropertyItem from './Items/PropertyItem';
 import SelectItem from './Items/SelectItem';
 import TextItem from './Items/TextItem';
 import DateItem from './Items/DateItem';
+import withStyle from './Items/WithStyle';
 
-interface Props {
-    strainId?: number;
+interface UrlParams {
+    strainIdStr?: string;
 }
 
-interface State {
-    requestError?: RequestError;
-    isLoading: boolean;
+const Text = withStyle(TextItem, 'strain-form');
+const Date = withStyle(DateItem, 'strain-form');
+const Select = withStyle(SelectItem, 'strain-form');
 
-    genusList: Genus[];
-    typeList: StrainType[];
-
-    genus?: Genus;
-    type?: StrainType;
+function TypeSelect(props: Parameters<typeof Select>[0]) {
+    return <Select {...props} />;
 }
 
-/**
- * add or edit strain
- */
-export default class StrainSavingForm extends React.Component<Props, State> {
-    private strain: Strain;
+export default function StrainSavingForm() {
+    const { strainIdStr } = useParams<UrlParams>();
 
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            isLoading: false,
-            genusList: [],
-            typeList: [],
-        };
+    const fetchData = useCallback(async () => {
+        const strainId = strainIdStr ? Number.parseInt(strainIdStr, 10) : null;
+        return strainId
+            ? Promise.all([getAllGenera(), getAllStrainTypes(), getStrain(strainId)])
+            : Promise.all([getAllGenera(), getAllStrainTypes()]);
+    }, [strainIdStr]);
 
-        this.strain = {
-            name: '',
-            collectionIndex: '',
-            dateReceiving: '',
-            source: '',
-            dateAdded: '',
-            obtainingMethod: '',
-            properties: [],
-        };
+    const { data, error, isPending } = useAsync(fetchData);
+
+    if (isPending) {
+        return <p>Загрузка данных...</p>;
+    }
+    if (error) {
+        return <p>`Ошибка при получении данных: ${error.message}`</p>;
     }
 
-    async componentDidMount() {
-        const { strainId } = this.props;
-        this.setState({ isLoading: true });
+    const [genusList, typeList, strain] = data!;
 
-        try {
-            const [genusList, typeList, strain] = await (strainId
-                ? Promise.all([getAllGenera(), getAllStrainTypes(), getStrain(strainId)])
-                : Promise.all([getAllGenera(), getAllStrainTypes()]));
+    const bioProperties = strain?.properties.map((property) => !property.isNote) ?? [];
+    const notes = strain?.properties.map((property) => property.isNote) ?? [];
 
-            this.setState({ genusList, typeList });
-            if (strain) {
-                this.strain = strain;
-                this.setState({ genus: strain.type?.genus });
-                this.forceUpdate();
-            }
-        } catch (error) {
-            this.setState({ requestError: error });
-        }
-
-        this.setState({ isLoading: false });
-    }
-
-    private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {};
-
-    private onBaseFieldChanged = (value: string, fieldName: string) => {
-        const strain: any = this.strain;
-        const field = fieldName as keyof Strain;
-
-        strain[field] = value;
-        this.forceUpdate();
-    };
-
-    render() {
-        const { isLoading, requestError } = this.state;
-
-        if (isLoading) {
-            return <p>Загрузка данных...</p>;
-        }
-
-        if (requestError) {
-            return `Ошибка при получении данных: ${requestError.message}`;
-        }
-
-        const { genusList, typeList, genus } = this.state;
-        const strain = this.strain;
-
-        // return (
-        //     <div>
-        //         штамм
-        //         <pre>{JSON.stringify(strain, null, 2)}</pre>
-        //     </div>
-        // );
-
-        return (
+    return (
+        <Formik
+            initialValues={{
+                genus: strain?.type?.genus.id ?? '',
+                type: strain?.type?.id ?? '',
+                name: strain?.name ?? '',
+                dateReceiving: strain?.dateReceiving ?? '',
+                collectionIndex: strain?.collectionIndex ?? '',
+                source: strain?.source ?? '',
+                obtainingMethod: strain?.obtainingMethod ?? '',
+                bioProperties: bioProperties,
+                notes: notes,
+            }}
+            validationSchema={Yup.object({
+                genus: Yup.string().required('обязательное поле'),
+                type: Yup.string().required('обязательное поле'),
+                name: Yup.string().required('обязательное поле'),
+                dateReceiving: Yup.date().required('обязательное поле'),
+                collectionIndex: Yup.string().required('обязательное поле'),
+                source: Yup.string().required('обязательное поле'),
+                obtainingMethod: Yup.string().required('обязательное поле'),
+            })}
+            onSubmit={(values, _helpers) => {
+                alert(JSON.stringify(values));
+            }}
+        >
             <div className='strain-adding'>
-                <form
-                    onSubmit={this.onSubmit}
-                    className='strain-form form--position-block-center'
-                >
-                    <SelectItem
-                        label='Род'
-                        items={genusList.map((genus) => ({
-                            text: genus.name,
-                            value: genus.id.toString(),
-                        }))}
-                        activeItem={genus?.id.toString()}
-                        onSelectChange={(sender) => {
-                            const id = parseInt(sender.value, 10);
-                            const genus = genusList.find((genus) => id === genus.id);
+                <Form className='strain-form form--position-block-center'>
+                    <Select name='genus' label='Род'>
+                        {genusList.map((genus) => {
+                            console.log(genus);
+                            return (
+                                <option key={genus.id} value={genus.id}>
+                                    {genus.name}
+                                </option>
+                            );
+                        })}
+                    </Select>
 
-                            if (strain.type?.genus.id !== genus?.id) {
-                                delete strain.type;
-                            }
-                            this.setState({ genus });
-                            this.forceUpdate();
-                        }}
-                    />
-                    <SelectItem
-                        label='Вид'
-                        items={typeList
-                            .filter((type) => type.genus.id === genus?.id)
-                            .map((type) => ({
-                                text: type.name,
-                                value: type.id.toString(),
-                            }))}
-                        activeItem={strain.type?.id.toString()}
-                        onSelectChange={(sender) => {
-                            const id = parseInt(sender.value, 10);
-                            strain.type = typeList.find((type) => id === type.id);
-                            this.forceUpdate();
-                        }}
-                    />
-                    <TextItem
-                        label='Исхродный индекс' // часть наименования
-                        name='name'
-                        value={strain.name}
-                        onChange={this.onBaseFieldChanged}
-                    />
-                    <DateItem
-                        label='Дата получения'
-                        name='dateReceiving'
-                        value={strain.dateReceiving}
-                        onChange={this.onBaseFieldChanged}
-                    />
-                    <TextItem
-                        label='Индекс штаммов' // каталожный индекс
-                        name='collectionIndex'
-                        value={strain.collectionIndex}
-                        onChange={this.onBaseFieldChanged}
-                    />
-                    <TextItem
-                        label='Происхождение' // происхождение
-                        name='source'
-                        value={strain.source}
-                        onChange={this.onBaseFieldChanged}
-                    />
-                    <TextItem
-                        label='Способ получения' // способ получения
-                        name='obtainingMethod'
-                        value={strain.obtainingMethod}
-                        onChange={this.onBaseFieldChanged}
-                    />
+                    <TypeSelect name='type' label='Вид'>
+                        {typeList.map((type) => (
+                            <option key={type.id} value={type.id}>
+                                {type.name}
+                            </option>
+                        ))}
+                    </TypeSelect>
+
+                    {/* часть наименования */}
+                    <Text label='Исхродный индекс' name='name' />
+                    {/* часть наименования */}
+                    <Date label='Дата получения' name='dateReceiving' />
+                    {/* каталожный индекс */}
+                    <Text label='Индекс штаммов' name='collectionIndex' />
+                    {/* происхождение */}
+                    <Text label='Происхождение' name='source' />
+                    {/* способ получения */}
+                    <Text label='Способ получения' name='obtainingMethod' />
 
                     {/** properties */}
-
-                    <div className='strain-form__properties properties'>
+                    {/* <div className='strain-form__properties properties'>
                         {strain.properties.map((property) => (
                             <PropertyItem
                                 key={property.propertyId}
@@ -208,42 +140,24 @@ export default class StrainSavingForm extends React.Component<Props, State> {
                                 ))}
                             </PropertyItem>
                         ))}
+                    </div> */}
+
+                    <div className='strain-adding__buttons form-buttons'>
+                        <button
+                            type='submit'
+                            className='form-buttons__submit-button form-button submit-button'
+                        >
+                            Добавить
+                        </button>
+                        <button
+                            type='button'
+                            className='form-buttons__cancel-button form-button cancel-button'
+                        >
+                            Отмена
+                        </button>
                     </div>
-                </form>
-
-                <div className='strain-adding__buttons form-buttons'>
-                    <button
-                        type='submit'
-                        className='form-buttons__submit-button form-button submit-button'
-                    >
-                        Добавить
-                    </button>
-                    <button
-                        type='button'
-                        className='form-buttons__cancel-button form-button cancel-button'
-                    >
-                        Отмена
-                    </button>
-                </div>
+                </Form>
             </div>
-        );
-    }
-}
-
-interface FieldFromParamProps {
-    param: FacticalParameter;
-    onChange: (value: string, changed: FacticalParameter) => void;
-}
-
-function FieldFromParam({ param, onChange }: FieldFromParamProps) {
-    const props = {
-        label: param.formalParameter.value,
-        name: param.id.toString(),
-        value: param.value,
-        onChange: (value: string, fieldName?: string) => onChange(value, param),
-    };
-    if (param.formalParameter.parameterDataType.name === 'Date') {
-        return <DateItem {...props} />;
-    }
-    return <TextItem {...props} />;
+        </Formik>
+    );
 }

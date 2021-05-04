@@ -1,35 +1,31 @@
 import { nanoid } from 'nanoid/non-secure';
 import { useState } from 'react';
+import { useField } from 'formik';
+import FormItemProps from './FormItemProps';
 
-export interface SelectItemProps {
-    name?: string;
-    label: string;
-    items: { text: string; value: string }[];
-    activeItem?: string;
-    onSelectChange: (sender: HTMLSelectElement) => void;
-}
-
-export default function SelectItem(props: SelectItemProps) {
+export default function SelectItem({
+    placeholder = '<не задано>',
+    label,
+    wrapClass,
+    labelClass,
+    inputClass,
+    ...props
+}: { placeholder?: string } & FormItemProps) {
     const [cssId] = useState(nanoid());
+    const [field, meta] = useField(props);
 
     return (
-        <div className='strain-form__item form__field'>
-            <label htmlFor={cssId} className='strain-form__label form-label'>
-                {props.label}
+        <div className={wrapClass + ' form__field'}>
+            <label htmlFor={cssId} className={labelClass + ' form-label'}>
+                {label}
             </label>
-            <select
-                name={props.name}
-                value={props.activeItem}
-                onChange={(e) => props.onSelectChange(e.target)}
-                id={cssId}
-                className='strain-form__input form-input'
-            >
-                {props.items.map(({ text, value }) => (
-                    <option key={value} value={value}>
-                        {text}
-                    </option>
-                ))}
+            <select id={cssId} className={inputClass + ' form-input'} {...field}>
+                <option hidden disabled value=''>
+                    {placeholder}
+                </option>
+                {props.children}
             </select>
+            {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
         </div>
     );
 }

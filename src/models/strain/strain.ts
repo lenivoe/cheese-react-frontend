@@ -22,31 +22,30 @@ export interface Genus {
     name: string;
 }
 
-
 interface Property {
-    propertyId: number;
+    propertyId?: number;
     propertyName: string;
+    isNote: boolean;
     ungroupedParameters?: FacticalParameter[];
     groups?: Group[];
 }
 
 interface Group {
-    groupId: number;
+    groupId?: number;
     parameters: FacticalParameter[];
 }
 
 export interface FacticalParameter {
     formalParameter: FormalParameter;
     groupId?: number;
-    id: number;
+    id?: number;
     value: string;
 }
 
 interface FormalParameter {
-    id: number;
-    isNote: boolean;
+    id?: number;
     parameterDataType: ParamDataType;
-    value: string; // name
+    name: string;
 }
 
 interface ParamDataType {

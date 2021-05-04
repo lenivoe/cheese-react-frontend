@@ -1,32 +1,38 @@
 import { nanoid } from 'nanoid/non-secure';
 import { useState } from 'react';
-import { dateToIso } from '../../../utils/utils';
+import { useField, useFormikContext } from 'formik';
 import RusDatePicker from '../../utils/RusDatePicker';
+import { dateToIso } from '../../../utils/utils';
+import FormItemProps from './FormItemProps';
 
-export interface DateItemProps<STR extends string | undefined> {
-    name: STR;
-    label: string;
-    value: string;
-    onChange: (value: string, fieldName: STR) => void;
-}
-
-export default function DateItem<STR extends string | undefined>(
-    props: DateItemProps<STR>
-) {
+export default function DateItem({
+    label,
+    wrapClass,
+    labelClass,
+    inputClass,
+    ...props
+}: FormItemProps) {
     const [cssId] = useState(nanoid());
+    const { setFieldValue } = useFormikContext();
+    const [{ value, onChange: _, ...field }, meta] = useField(props);
+
+    const date = value ? new Date(value) : new Date();
 
     return (
-        <div className='strain-form__item form__field'>
-            <label htmlFor={cssId} className='strain-form__label form-label'>
-                {props.label}
+        <div className={wrapClass + ' form__field'}>
+            <label htmlFor={cssId} className={labelClass + ' form-label'}>
+                {label}
             </label>
             <RusDatePicker
-                name={props.name}
-                selected={props.value === '' ? new Date() : new Date(props.value)}
-                onChange={(date) => props.onChange(dateToIso(date as Date), props.name)}
                 id={cssId}
-                className='strain-form__input form-input'
+                className={inputClass + ' form-input'}
+                selected={date}
+                onChange={(date) =>
+                    setFieldValue(field.name, dateToIso(date as Date | undefined))
+                }
+                {...field}
             />
+            {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
         </div>
     );
 }
