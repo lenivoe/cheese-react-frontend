@@ -1,0 +1,52 @@
+.genus-list {
+  width: 650px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  &__item {
+    width: 300px;
+  }
+}
+
+.genus {
+
+  &-item {
+    min-height: 90px;
+    margin-bottom: 30px;
+  }
+
+  &-link {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+
+    padding: 10px 25px;
+    background-color: $block-color;
+    transition: all .2s linear;
+    color: $text-color;
+    font-weight: 700;
+    border: 1px transparent solid;
+
+    &:hover {
+      background-color: $item-fon-hover-color;
+      border: 1px #000000 solid;
+      color: $text-color;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    span {
+      display: block;
+    }
+  }
+
+  &-strains-number {
+    display: flex!important;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
