@@ -5,7 +5,7 @@
   &__buttons {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: start;
 
     font-size: 18px;
     position: fixed;
@@ -35,6 +35,7 @@
     }
   }
 }
+
 @media (max-width: 1024px) {
   .strain-adding {
     &__buttons {
@@ -46,7 +47,11 @@
 
 .strain-form {
 
-  &__item{
+  &__general-info {
+    padding-right: 67px;
+  }
+
+  &__item {
     width: 550px;
   }
 
@@ -59,8 +64,9 @@
   }
 }
 
+
 .property {
-  margin-top: 25px;
+  margin-top: 35px;
 
   &__title {
     margin-bottom: 10px;
@@ -68,7 +74,40 @@
     font-weight: 700;
   }
 
-  &__parameter{
+
+  &__group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+
+  &__parameter {
     width: 450px;
+  }
+
+  &__buttons-block {
+    width: 62px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+
+  }
+
+  &__delete-button {
+    margin-top: -15px;
+    padding: 4px 10px;
+    border-radius: 5px;
+  }
+
+  &__add-button {
+    padding: 4px 10px;
+    border-radius: 5px;
+  }
+
+
+  &__add-button-block {
+    display: flex;
+    justify-content: flex-end;
   }
 }

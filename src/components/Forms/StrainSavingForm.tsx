@@ -59,13 +59,13 @@ export default function StrainSavingForm() {
                 notes: notes,
             }}
             validationSchema={Yup.object({
-                genus: Yup.string().required('обязательное поле'),
-                type: Yup.string().required('обязательное поле'),
-                name: Yup.string().required('обязательное поле'),
-                dateReceiving: Yup.date().required('обязательное поле'),
-                collectionIndex: Yup.string().required('обязательное поле'),
-                source: Yup.string().required('обязательное поле'),
-                obtainingMethod: Yup.string().required('обязательное поле'),
+                genus: Yup.string().required('обязательно'),
+                type: Yup.string().required('обязательно'),
+                name: Yup.string().required('обязательно'),
+                dateReceiving: Yup.date().required('обязательно'),
+                collectionIndex: Yup.string().required('обязательно'),
+                source: Yup.string().required('обязательно'),
+                obtainingMethod: Yup.string().required('обязательно'),
             })}
             onSubmit={(values, _helpers) => {
                 alert(JSON.stringify(values));
