@@ -1,22 +1,26 @@
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useField, useFormikContext } from 'formik';
 import RusDatePicker from '../../utils/RusDatePicker';
-import { dateToIso } from '../../../utils/utils';
 import FormItemProps from './FormItemProps';
+import moment from 'moment';
 
 export default function DateItem({
+    format = 'YYYY-MM-DD',
     label,
     wrapClass,
     labelClass,
     inputClass,
     ...props
-}: FormItemProps) {
+}: { format?: string } & FormItemProps) {
     const [cssId] = useState(nanoid());
     const { setFieldValue } = useFormikContext();
     const [{ value, onChange: _, ...field }] = useField(props);
 
-    const date = value ? new Date(value) : new Date();
+    const onChange = useCallback(
+        (date: Date | null) => setFieldValue(field.name, moment(date).format(format)),
+        [field.name, format, setFieldValue]
+    );
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -26,10 +30,8 @@ export default function DateItem({
             <RusDatePicker
                 id={cssId}
                 className={inputClass + ' form-input'}
-                selected={date}
-                onChange={(date) =>
-                    setFieldValue(field.name, dateToIso(date as Date | undefined))
-                }
+                selected={new Date(moment(value).format(format))}
+                onChange={onChange}
                 {...field}
             />
         </div>

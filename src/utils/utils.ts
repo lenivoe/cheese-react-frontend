@@ -3,7 +3,3 @@ export function delay(ms: number) {
         setTimeout(resolve, ms);
     });
 }
-
-export function dateToIso(date?: Date) {
-    return (date ?? new Date()).toISOString().split('T')[0] ?? '';
-}
