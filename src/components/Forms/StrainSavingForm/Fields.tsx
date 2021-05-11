@@ -13,7 +13,3 @@ const FormattedDate: typeof DateItem = (props) => (
 export const DateField = withError(withStyle(FormattedDate, 'strain-form'), 'form-error');
 export const TextField = withError(withStyle(TextItem, 'strain-form'), 'form-error');
 export const SelectField = withError(withStyle(SelectItem, 'strain-form'), 'form-error');
-
-function TypeSelectField(props: Parameters<typeof SelectField>[0]) {
-    return <SelectField {...props} />;
-}

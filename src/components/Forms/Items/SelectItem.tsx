@@ -12,7 +12,7 @@ function SelectItem({
     ...props
 }: { placeholder?: string } & FormItemProps) {
     const [cssId] = useState(nanoid());
-    const [{ value = SelectItem.UNSELECTED_VALUE, ...field }] = useField(props);
+    const [{ value = SelectItem.UNSELECTED_VALUE, onChange, ...field }] = useField(props);
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -24,6 +24,7 @@ function SelectItem({
                 id={cssId}
                 className={inputClass + ' form-input'}
                 value={value}
+                onChange={(props.onChange as typeof onChange) ?? onChange}
             >
                 <option hidden disabled value={SelectItem.UNSELECTED_VALUE}>
                     {placeholder}
