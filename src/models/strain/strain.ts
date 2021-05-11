@@ -13,16 +13,16 @@ export default interface Strain {
 }
 
 export interface StrainType {
-    id: number;
+    id?: number;
     name: string;
     genus: Genus;
 }
 export interface Genus {
-    id: number;
+    id?: number;
     name: string;
 }
 
-interface Property {
+export interface Property {
     propertyId?: number;
     propertyName: string;
     isNote: boolean;
@@ -30,7 +30,7 @@ interface Property {
     groups?: Group[];
 }
 
-interface Group {
+export interface Group {
     groupId?: number;
     parameters: FacticalParameter[];
 }
@@ -42,15 +42,17 @@ export interface FacticalParameter {
     value: string;
 }
 
-interface FormalParameter {
+export interface FormalParameter {
     id?: number;
     parameterDataType: ParamDataType;
     name: string;
 }
 
-interface ParamDataType {
+export interface ParamDataType {
     id: number;
     name: DataType;
 }
 
-type DataType = 'String' | 'Number' | 'Time' | 'Date' | 'Boolean' | 'None';
+export type DataType = 'String' | 'Number' | 'Time' | 'Date' | 'Boolean' | 'Item';
+
+export const DATE_FORMAT = 'YYYY-MM-DD';

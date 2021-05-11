@@ -3,11 +3,12 @@ import { ErrorMessage } from 'formik';
 
 const withError = <P extends { name: string }>(
     Component: React.ComponentType<P>,
-    errClass = 'field-error'
+    errClass = 'field-error',
+    htmlTag = 'div'
 ) => (props: P) => (
     <>
         <Component {...props} />
-        <ErrorMessage name={props.name} component='div' className={errClass} />
+        <ErrorMessage name={props.name} component={htmlTag} className={errClass} />
     </>
 );
 

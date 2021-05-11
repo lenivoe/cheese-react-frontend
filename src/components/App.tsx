@@ -3,7 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import React, { useCallback, useState } from 'react';
 import Header from './Header';
 import BlockMenu, { MenuItemInfo } from './Forms/BlockMenu';
-import StrainSavingForm from './Forms/StrainSavingForm';
+import StrainSavingForm from './Forms/StrainSavingForm/StrainSavingForm';
 import MicroorganismsCatalog from './Forms/MicroorganismsCatalog';
 
 const menuLabels = [
