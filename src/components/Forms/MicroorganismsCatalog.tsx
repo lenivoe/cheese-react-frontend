@@ -47,7 +47,7 @@ function GenusList() {
             <ul className="genus-list">
                 {genusList.map((genus) => (
                     <li className="genus-list__item genus-item" key={genus.id}>
-                        <Link className="genus-list__link genus-link" to={join(url, genus.id.toString())}>
+                        <Link className="genus-list__link genus-link" to={join(url, genus.id!.toString())}>
                             <span
                                 className="genus-link__name genus-name">{genus.name.length >= 50 ?
                                 genus.name.substr(1, 49) + "..." : genus.name}</span>
@@ -83,7 +83,7 @@ function TypeList() {
                 {typeList
                     .map((type) => (
                         <li className="type-list__item type-item" key={type.id}>
-                            <Link className="type-list__link type-link" to={join(url, type.id.toString())}>
+                            <Link className="type-list__link type-link" to={join(url, type.id!.toString())}>
                                 {type.name}
                             </Link>
                         </li>
