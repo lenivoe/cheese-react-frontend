@@ -39,7 +39,7 @@ export async function getStrainTypeByGenus(genusId:number, timeout: number = def
 }
 
 export async function getStrainsByType(typeId:number, timeout: number = defaultTimeout) {
-    const response = await axios.get<StrainType[]>(`/strain-genus/` + typeId + `/types`, getConfig(timeout));
+    const response = await axios.get<Strain[]>(`/strain-genus/` + typeId + `/types`, getConfig(timeout));
     return response.data;
 }
 

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
-import {getAllGenera, getStrainTypeByGenus} from '../../utils/data_fetch';
+import {getAllGenera, getStrainTypeByGenus, getStrainsByType} from '../../utils/data_fetch';
 import {useAsync} from 'react-async';
 import {join} from 'path';
 
@@ -78,17 +78,55 @@ function TypeList() {
     const typeList = data!;
 
     return (
-        <div className="type-list-block">
-            <ul className="type-list">
-                {typeList
-                    .map((type) => (
-                        <li className="type-list__item type-item" key={type.id}>
-                            <Link className="type-list__link type-link" to={join(url, type.id!.toString())}>
+        <div className="types-list-block">
+            {typeList
+                .map((type) => (
+                    <ul className="types-list big-list">
+
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {"Type name here"}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
                                 {type.name}
                             </Link>
                         </li>
-                    ))}
-            </ul>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {"Type name here"}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {type.name}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {"Type name here"}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {type.name}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {"Type name here"}
+                            </Link>
+                        </li>
+                        <li className="types-list__item big-list__item" key={type.id}>
+                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
+                                {type.name}
+                            </Link>
+                        </li>
+
+                    </ul>
+
+                ))}
         </div>
     );
 }
@@ -96,7 +134,7 @@ function TypeList() {
 function StrainList() {
 
     const typeId = Number(useParams<UrlParams>().typeId);
-    const fetchData = useCallback(() => getStrainTypeByGenus(typeId), [typeId])
+    const fetchData = useCallback(() => getStrainsByType(typeId), [typeId])
     const {data, error, isPending} = useAsync(fetchData)
 
     if (isPending) {
@@ -110,16 +148,67 @@ function StrainList() {
 
     return (
         <nav>
-            <ul>
-                {strainList
-                    .map((strain) => (
-                        <li key={strain.id}>
-                            <Link to={join('/strain', strain.id!.toString(), 'edit')}>
+
+            {strainList
+                .map((strain) => (
+                    <ul className="strains-list big-list">
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strain-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
                                 {strain.name}
                             </Link>
                         </li>
-                    ))}
-            </ul>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                        <li className="big-list__item strains-list__item" key={strain.id}>
+                            <Link className="strains-list__link strains-link"
+                                  to={join('/strain', strain.id!.toString(), 'edit')}>
+                                {strain.name}
+                            </Link>
+                        </li>
+                    </ul>
+                ))}
+
         </nav>
     );
 }

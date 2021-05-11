@@ -51,7 +51,7 @@ export default function StrainSavingForm() {
                 properties: { bio: bioProperties, note: noteProperies },
             }}
             validationSchema={() => {
-                const requiredMsg = 'обязательное поле';
+                const requiredMsg = 'обязательно';
 
                 return Yup.object({
                     genus: Yup.object().shape({
