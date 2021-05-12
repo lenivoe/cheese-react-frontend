@@ -1,17 +1,31 @@
+import assert from 'assert';
 import { useField } from 'formik';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import FormItemProps from './FormItemProps';
 
 export default function TextItem({
     label,
+    onValueChange,
     wrapClass,
     labelClass,
     inputClass,
     ...props
 }: FormItemProps) {
+    assert(
+        !props.onChange,
+        `Field '${props.name}' must use onValueChange instead onChange`
+    );
+
     const [cssId] = useState(nanoid());
-    const [field] = useField(props);
+    const [{ onChange, ...field }] = useField(props);
+    const { placeholder, type, disabled } = props;
+
+    const onTextChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+        (e) =>
+            onValueChange ? onValueChange(e.target.name, e.target.value) : onChange(e),
+        [onValueChange, onChange]
+    );
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -19,11 +33,13 @@ export default function TextItem({
                 {label}
             </label>
             <input
+                {...field}
                 id={cssId}
                 className={inputClass + ' form-input'}
-                {...field}
-                placeholder={props.placeholder}
-                type={props.type}
+                placeholder={placeholder}
+                type={type}
+                disabled={disabled}
+                onChange={onTextChange}
             />
         </div>
     );

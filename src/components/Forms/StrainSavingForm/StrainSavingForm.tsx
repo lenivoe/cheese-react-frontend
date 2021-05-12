@@ -33,7 +33,7 @@ export default function StrainSavingForm() {
         return <p>`Ошибка при получении данных: ${error.message}`</p>;
     }
 
-    const [genusList, typeList, strain] = data!;
+    const [genusList, typeList, strain] = data ?? [[], []];
 
     const bioProperties = strain?.properties.filter((property) => !property.isNote) ?? [];
     const noteProperies = strain?.properties.filter((property) => property.isNote) ?? [];
@@ -79,11 +79,10 @@ export default function StrainSavingForm() {
             {({ values, setFieldValue }) => {
                 // В случае, когда Род и Вид штамма созданы только что (не содержатся в базе), у них нет id.
                 // Тогда, если выбран Род без id, то надо вывести Вид без id
-                const curTypeList = typeList.filter(({ genus }) => {
-                    return (
+                const curTypeList = typeList.filter(
+                    ({ genus }) =>
                         (!genus.id && !values.genus?.id) || genus.id === values.genus?.id
-                    );
-                });
+                );
 
                 return (
                     <div className='strain-adding'>
@@ -91,9 +90,9 @@ export default function StrainSavingForm() {
                             <SelectField
                                 name='genus.name'
                                 label='Род'
-                                onChange={(e: { target: { value: string } }) => {
+                                onValueChange={(_name, value) => {
                                     const genus = genusList.find(
-                                        (genus) => genus.name === e.target.value
+                                        (genus) => genus.name === value
                                     );
                                     setFieldValue('genus', genus);
                                     setFieldValue('type', undefined);
@@ -109,9 +108,9 @@ export default function StrainSavingForm() {
                             <SelectField
                                 name='type.name'
                                 label='Вид'
-                                onChange={(e: { target: { value: string } }) => {
-                                    const type = typeList.find(
-                                        (type) => type.name === e.target.value
+                                onValueChange={(_name, value) => {
+                                    const type = curTypeList.find(
+                                        (type) => type.name === value
                                     );
                                     setFieldValue('type', type);
                                 }}

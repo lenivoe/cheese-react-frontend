@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { nanoid } from 'nanoid/non-secure';
 import React, { useCallback, useState } from 'react';
 import { useField, useFormikContext } from 'formik';
@@ -5,21 +6,37 @@ import RusDatePicker from '../../utils/RusDatePicker';
 import FormItemProps from './FormItemProps';
 import moment from 'moment';
 
+interface DateItemExtraProps {
+    format?: string;
+}
+
 export default function DateItem({
     format = 'YYYY-MM-DD',
     label,
+    onValueChange,
     wrapClass,
     labelClass,
     inputClass,
     ...props
-}: { format?: string } & FormItemProps) {
+}: DateItemExtraProps & FormItemProps) {
+    assert(
+        !props.onChange,
+        `Field '${props.name}' must use onValueChange instead onChange`
+    );
+
     const [cssId] = useState(nanoid());
     const { setFieldValue } = useFormikContext();
-    const [{ value, onChange: _, ...field }] = useField(props);
 
-    const onChange = useCallback(
-        (date: Date | null) => setFieldValue(field.name, moment(date).format(format)),
-        [field.name, format, setFieldValue]
+    // обычный onChange не работает
+    const [{ value, onChange: _, ...field }] = useField(props);
+    const { disabled } = props;
+
+    // если callback не задан, используется функция сохранения нового знаения в поле
+    // иначе вся отвественность на сохранении результата ложится на callback
+    const sendValue: typeof onValueChange = onValueChange ?? setFieldValue;
+    const onDateChange: (date: Date | null) => void = useCallback(
+        (date) => sendValue(field.name, moment(date).format(format)),
+        [field.name, format, sendValue]
     );
 
     return (
@@ -28,11 +45,12 @@ export default function DateItem({
                 {label}
             </label>
             <RusDatePicker
+                {...field}
                 id={cssId}
                 className={inputClass + ' form-input'}
                 selected={new Date(moment(value).format(format))}
-                onChange={onChange}
-                {...field}
+                onChange={onDateChange}
+                disabled={disabled}
             />
         </div>
     );

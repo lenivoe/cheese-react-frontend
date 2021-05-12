@@ -1,18 +1,36 @@
+import assert from 'assert';
 import { nanoid } from 'nanoid/non-secure';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useField } from 'formik';
 import FormItemProps from './FormItemProps';
+
+interface SelectItemExtraProps {
+    placeholder?: string;
+}
 
 function SelectItem({
     placeholder = '<не задано>',
     label,
+    onValueChange,
     wrapClass,
     labelClass,
     inputClass,
     ...props
-}: { placeholder?: string } & FormItemProps) {
+}: SelectItemExtraProps & FormItemProps) {
+    assert(
+        !props.onChange,
+        `Field '${props.name}' must use onValueChange instead onChange`
+    );
+
     const [cssId] = useState(nanoid());
     const [{ value = SelectItem.UNSELECTED_VALUE, onChange, ...field }] = useField(props);
+    const { children, disabled } = props;
+
+    const onSelectChange: React.ChangeEventHandler<HTMLSelectElement> = useCallback(
+        (e) =>
+            onValueChange ? onValueChange(e.target.name, e.target.value) : onChange(e),
+        [onValueChange, onChange]
+    );
 
     return (
         <div className={wrapClass + ' form__field'}>
@@ -24,12 +42,13 @@ function SelectItem({
                 id={cssId}
                 className={inputClass + ' form-input'}
                 value={value}
-                onChange={(props.onChange as typeof onChange) ?? onChange}
+                disabled={disabled}
+                onChange={onSelectChange}
             >
                 <option hidden disabled value={SelectItem.UNSELECTED_VALUE}>
                     {placeholder}
                 </option>
-                {props.children}
+                {children}
             </select>
         </div>
     );

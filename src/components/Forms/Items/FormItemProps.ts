@@ -6,9 +6,11 @@ export interface StyleProps {
     inputClass?: string;
 }
 
-type FormItemProps = FieldHookConfig<string> &
-    StyleProps & {
-        label: string;
-    };
+export interface ExtraItemProps {
+    label: string;
+    onValueChange?: (name: string, value: string) => void;
+}
+
+type FormItemProps = FieldHookConfig<string> & StyleProps & ExtraItemProps;
 
 export default FormItemProps;
