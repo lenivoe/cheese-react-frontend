@@ -1,6 +1,5 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
-import {ObscureLink} from '../utils/ObscureLink';
+import { Link, useLocation } from 'react-router-dom';
 
 export interface MenuItemInfo {
     id: number;
@@ -13,8 +12,8 @@ interface BlockMenuProps {
     onChoose?: (item: MenuItemInfo) => void;
 }
 
-export default function BlockMenu({items, onChoose}: BlockMenuProps) {
-    const {pathname} = useLocation(); // адрес текущей страницы
+export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
+    const { pathname } = useLocation(); // адрес текущей страницы
 
     // выделяет пункт меню в зависимости от текущего адреса страницы
     const activeItem = items.reduce<MenuItemInfo | undefined>((active, item) => {
@@ -24,10 +23,10 @@ export default function BlockMenu({items, onChoose}: BlockMenuProps) {
     }, undefined);
 
     return (
-        <div className="main-content__menu">
+        <div className='main-content__menu'>
             <div className='menu'>
-                {items.map(({id, label, url}) => (
-                    <ObscureLink to={url} key={id}>
+                {items.map(({ id, label, url }) => (
+                    <Link className='obscure-a' to={url} key={id}>
                         <MenuItem
                             label={label}
                             isActive={id === activeItem?.id}
@@ -36,7 +35,7 @@ export default function BlockMenu({items, onChoose}: BlockMenuProps) {
                                 (() => onChoose(items.find((item) => item.id === id)!))
                             }
                         />
-                    </ObscureLink>
+                    </Link>
                 ))}
             </div>
         </div>
@@ -49,7 +48,7 @@ interface MenuItemProps {
     onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
-function MenuItem({label, isActive, onClick}: MenuItemProps) {
+function MenuItem({ label, isActive, onClick }: MenuItemProps) {
     const active = isActive ? ' active' : '';
 
     return (
