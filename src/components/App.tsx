@@ -11,7 +11,8 @@ const menuLabels = [
     'Добавить штамм микроорганизма',
     'Поиск и редактирование штаммов микроорганизмов',
     'Редактирование свойств и параметров микроорганзимов',
-    '[Тест] редактирование штамма',
+    '[Тест] редактирование штамма 1',
+    '[Тест] редактирование штамма 2',
 ];
 
 const menuButtonsInfo: MenuItemInfo[] = [
@@ -19,6 +20,7 @@ const menuButtonsInfo: MenuItemInfo[] = [
     '/strain/add',
     '/strain/search',
     '/properties',
+    '/strain/1/edit',
     '/strain/2/edit',
 ].map((url, i) => ({ id: i, label: menuLabels[i], url }));
 
