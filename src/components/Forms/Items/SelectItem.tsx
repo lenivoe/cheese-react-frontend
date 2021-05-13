@@ -42,7 +42,7 @@ function SelectItem({
                 id={cssId}
                 className={inputClass + ' form-input'}
                 value={value}
-                disabled={disabled}
+                disabled={disabled || React.Children.count(children) === 0}
                 onChange={onSelectChange}
             >
                 <option hidden disabled value={SelectItem.UNSELECTED_VALUE}>
