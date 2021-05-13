@@ -1,54 +1,34 @@
 import './App.scss';
+import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import React, { useCallback, useState } from 'react';
 import Header from './Header';
-import BlockMenu, { MenuItemInfo } from './Forms/BlockMenu';
+import BlockMenu from './Forms/BlockMenu';
 import StrainSavingForm from './Forms/StrainSavingForm/StrainSavingForm';
 import MicroorganismsCatalog from './Forms/MicroorganismsCatalog';
+import PropertyEditForm from './Forms/PropertyEditForm';
+import useMenuState from '../hooks/useMenuState';
 
-const menuLabels = [
-    'Каталог микроорганизмов',
-    'Добавить штамм микроорганизма',
-    'Поиск и редактирование штаммов микроорганизмов',
-    'Редактирование свойств и параметров микроорганзимов',
-    '[Тест] редактирование штамма 1',
-    '[Тест] редактирование штамма 2',
-];
-
-const menuButtonsInfo: MenuItemInfo[] = [
-    '/catalog',
-    '/strain/add',
-    '/strain/search',
-    '/properties',
-    '/strain/1/edit',
-    '/strain/2/edit',
-].map((url, i) => ({ id: i, label: menuLabels[i], url }));
-
-export default function App() {
-    const [isBlockMenuActive, setIsBlockMenuActive] = useState(true);
-
-    const onMenuButtonClick = useCallback(
-        () => setIsBlockMenuActive((isActive) => !isActive),
-        []
-    );
+function App() {
+    const { items, active, visible, toggleVisible } = useMenuState();
 
     return (
-        <BrowserRouter>
+        <>
             <Header
-                onMenuButtonClick={onMenuButtonClick}
-                isMenuButtonActive={isBlockMenuActive}
+                onMenuButtonClick={toggleVisible}
+                isMenuButtonActive={visible}
+                title={active.label}
             />
 
             <main className='main container'>
                 <div className='main__content main-content'>
-                    {isBlockMenuActive && <BlockMenu items={menuButtonsInfo} />}
+                    <BlockMenu active={active} items={items} visible={visible} />
 
                     <div className='main-content__data'>
                         <Switch>
                             <Route path='/catalog' component={MicroorganismsCatalog} />
                             <Route path='/strain/add' component={StrainSavingForm} />
                             <Route path='/strain/search' component={undefined} />
-                            <Route path='/properties' component={undefined} />
+                            <Route path='/properties' component={PropertyEditForm} />
                             <Route
                                 path='/strain/:strainId/edit'
                                 component={StrainSavingForm}
@@ -58,6 +38,14 @@ export default function App() {
                     </div>
                 </div>
             </main>
-        </BrowserRouter>
+        </>
     );
 }
+
+const AppConfigurator = () => (
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
+
+export default AppConfigurator;

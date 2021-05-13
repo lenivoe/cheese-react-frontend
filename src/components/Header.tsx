@@ -3,9 +3,14 @@ import React from 'react';
 export interface HeaderProps {
     onMenuButtonClick: () => void;
     isMenuButtonActive: boolean;
+    title: string;
 }
 
-export default function Header({ onMenuButtonClick, isMenuButtonActive }: HeaderProps) {
+export default function Header({
+    onMenuButtonClick,
+    isMenuButtonActive,
+    title,
+}: HeaderProps) {
     const active = isMenuButtonActive ? ' active' : '';
 
     return (
@@ -17,7 +22,7 @@ export default function Header({ onMenuButtonClick, isMenuButtonActive }: Header
                 >
                     Меню
                 </div>
-                <div className='header__title'>Добавление штамма</div>
+                <div className='header__title'>{title}</div>
             </div>
         </header>
     );

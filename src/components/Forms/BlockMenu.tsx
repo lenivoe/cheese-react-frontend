@@ -1,61 +1,43 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export interface MenuItemInfo {
-    id: number;
+    id: string;
     label: string;
     url: string;
 }
 
 interface BlockMenuProps {
+    active: MenuItemInfo;
     items: MenuItemInfo[];
-    onChoose?: (item: MenuItemInfo) => void;
+    visible?: boolean;
 }
 
-export default function BlockMenu({ items, onChoose }: BlockMenuProps) {
-    const { pathname } = useLocation(); // адрес текущей страницы
-
-    // выделяет пункт меню в зависимости от текущего адреса страницы
-    const activeItem = items.reduce<MenuItemInfo | undefined>((active, item) => {
-        const isMatch = pathname.startsWith(item.url);
-        const isFound = isMatch && (!active || active.url.length < item.url.length);
-        return isFound ? item : active;
-    }, undefined);
-
-    return (
+const BlockMenu = ({ active, items, visible = true }: BlockMenuProps) =>
+    !visible ? null : (
         <div className='main-content__menu'>
             <div className='menu'>
                 {items.map(({ id, label, url }) => (
                     <Link className='obscure-a' to={url} key={id}>
-                        <MenuItem
-                            label={label}
-                            isActive={id === activeItem?.id}
-                            onClick={
-                                onChoose &&
-                                (() => onChoose(items.find((item) => item.id === id)!))
-                            }
-                        />
+                        <MenuItem label={label} active={id === active?.id} />
                     </Link>
                 ))}
             </div>
         </div>
     );
-}
 
 interface MenuItemProps {
     label: string;
-    isActive: boolean;
-    onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    active: boolean;
+    onClick?: JSX.IntrinsicElements['div']['onClick'];
 }
 
-function MenuItem({ label, isActive, onClick }: MenuItemProps) {
-    const active = isActive ? ' active' : '';
-
-    return (
-        <div onClick={onClick} className={'menu__item menu-item' + active}>
-            <div className='menu-item__text item-text'>
-                <span>{label}</span>
-            </div>
+const MenuItem = ({ label, active, onClick }: MenuItemProps) => (
+    <div onClick={onClick} className={`menu__item menu-item ${active ? 'active' : ''}`}>
+        <div className='menu-item__text item-text'>
+            <span>{label}</span>
         </div>
-    );
-}
+    </div>
+);
+
+export default BlockMenu;
