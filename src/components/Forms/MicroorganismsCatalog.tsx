@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
-import {getAllGenera, getStrainTypeByGenus, getStrainsByType} from '../../utils/data_fetch';
+import API from '../../utils/API';
 import {useAsync} from 'react-async';
 import {join} from 'path';
 
@@ -29,7 +29,7 @@ interface UrlParams {
 
 function GenusList() {
     const {url} = useRouteMatch();
-    const fetchData = useCallback(() => getAllGenera(), [])
+    const fetchData = useCallback(() => API.genus.getAll(), [])
     const {data, error, isPending} = useAsync(fetchData)
 
     if (isPending) {
@@ -65,7 +65,7 @@ function TypeList() {
     const {url} = useRouteMatch();
     const genusId = Number(useParams<UrlParams>().genusId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchData = useCallback(() => getStrainTypeByGenus(genusId), [genusId])
+    const fetchData = useCallback(() => API.genus.getTypes(genusId), [genusId])
     const {data, error, isPending} = useAsync(fetchData)
 
     if (isPending) {
@@ -134,7 +134,7 @@ function TypeList() {
 function StrainList() {
 
     const typeId = Number(useParams<UrlParams>().typeId);
-    const fetchData = useCallback(() => getStrainsByType(typeId), [typeId])
+    const fetchData = useCallback(() => API.type.getStrains(typeId), [typeId])
     const {data, error, isPending} = useAsync(fetchData)
 
     if (isPending) {

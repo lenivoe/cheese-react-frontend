@@ -1,12 +1,8 @@
-import { Genus, StrainType, Property } from '../../../models/strain/strain';
+import Strain, { Genus, Property } from '../../../models/strain/strain';
 
-export default interface FormValues {
+type FormValues = Omit<Strain, 'properties'> & {
     genus: Genus | undefined;
-    type: StrainType | undefined;
-    name: string;
-    dateReceiving: string;
-    collectionIndex: string;
-    source: string;
-    obtainingMethod: string;
     properties: { bio: Property[]; note: Property[] };
-}
+};
+
+export default FormValues;

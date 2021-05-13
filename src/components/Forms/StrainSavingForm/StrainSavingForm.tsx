@@ -4,11 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { getAllGenera, getAllStrainTypes, getStrain } from '../../../utils/data_fetch';
-import { DATE_FORMAT } from '../../../models/strain/strain';
+import API from '../../../utils/API';
+import Strain, { DATE_FORMAT } from '../../../models/strain/strain';
 import { DateField, SelectField, TextField } from './Fields';
 import PropertiesList from './PropertiesList';
-import { delay } from '../../../utils/utils';
 import FormValues from './FormValues';
 
 interface UrlParams {
@@ -16,22 +15,24 @@ interface UrlParams {
 }
 
 export default function StrainSavingForm() {
+    API.strain.getAll().then((strains) => console.log('strains:', strains));
+
     const { strainId: strainIdStr } = useParams<UrlParams>();
 
     const fetchData = useCallback(async () => {
         const strainId = strainIdStr ? Number.parseInt(strainIdStr, 10) : null;
         return Promise.all([
-            getAllGenera(),
-            getAllStrainTypes(),
-            strainId ? getStrain(strainId) : undefined,
-            delay(5000),
+            API.genus.getAll(),
+            API.type.getAll(),
+            strainId ? API.strain.get(strainId) : undefined,
         ]);
     }, [strainIdStr]);
 
     const { data, error, isPending } = useAsync(fetchData);
-    const disabled = isPending || !!error;
 
-    const [genusList, typeList, strain] = data ?? [[], [], undefined, null];
+    const [genusList, typeList, strain] = data ?? [[], [], undefined];
+
+    console.log('strain loading:', strain);
 
     return (
         <div className='strain-adding'>
@@ -41,6 +42,7 @@ export default function StrainSavingForm() {
             <Formik<FormValues>
                 enableReinitialize={true}
                 initialValues={{
+                    id: strain?.id,
                     genus: strain?.type?.genus,
                     type: strain?.type,
                     name: strain?.name ?? '',
@@ -48,6 +50,8 @@ export default function StrainSavingForm() {
                     collectionIndex: strain?.collectionIndex ?? '',
                     source: strain?.source ?? '',
                     obtainingMethod: strain?.obtainingMethod ?? '',
+                    creator: strain?.creator,
+                    dateAdded: moment(strain?.dateAdded).format(DATE_FORMAT),
                     properties: {
                         bio: strain?.properties.filter((prop) => !prop.isNote) ?? [],
                         note: strain?.properties.filter((prop) => prop.isNote) ?? [],
@@ -72,14 +76,25 @@ export default function StrainSavingForm() {
                         collectionIndex: Yup.string().required(requiredMsg),
                         source: Yup.string().required(requiredMsg),
                         obtainingMethod: Yup.string().required(requiredMsg),
+                        creator: Yup.string().notRequired(),
+                        dateAdded: Yup.date().required(requiredMsg),
                     });
                 }}
-                onSubmit={(values, _helpers) => {
-                    console.log(values);
-                    alert(JSON.stringify(values));
+                onSubmit={async (values, _helpers) => {
+                    const { genus: _, properties, ...rest } = values;
+                    const strain: Strain = {
+                        properties: [...properties.bio, ...properties.note],
+                        ...rest,
+                    };
+
+                    console.log('input:', strain);
+                    const returnedStrain = await API.strain.post(strain);
+                    console.log('output:', returnedStrain);
+
+                    // alert(JSON.stringify(values));
                 }}
             >
-                {({ values, setFieldValue }) => {
+                {({ values, setFieldValue, isSubmitting }) => {
                     // В случае, когда Род и Вид штамма созданы только что (не содержатся в базе), у них нет id.
                     // Тогда, если выбран Род без id, то надо вывести Вид без id
                     const curTypeList = typeList.filter(
@@ -87,6 +102,8 @@ export default function StrainSavingForm() {
                             (!genus.id && !values.genus?.id) ||
                             genus.id === values.genus?.id
                     );
+
+                    const disabled = isPending || !!error || isSubmitting;
 
                     return (
                         <Form className='strain-form form--position-block-center'>
