@@ -1,6 +1,6 @@
 export default interface Strain {
     id?: number; // nullable
-    type?: StrainType;
+    type: StrainType;
     name: string;
     collectionIndex: string;
     dateReceiving: string;

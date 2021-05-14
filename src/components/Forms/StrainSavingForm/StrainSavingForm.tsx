@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useAsync } from 'react-async';
 import { useParams } from 'react-router-dom';
 import { Form, Formik } from 'formik';
@@ -10,14 +10,8 @@ import { DateField, SelectField, TextField } from './Fields';
 import PropertiesList from './PropertiesList';
 import FormValues from './FormValues';
 
-interface UrlParams {
-    strainId?: string;
-}
-
-export default function StrainSavingForm() {
-    API.strain.getAll().then((strains) => console.log('strains:', strains));
-
-    const { strainId: strainIdStr } = useParams<UrlParams>();
+const useBackendData = () => {
+    const { strainId: strainIdStr } = useParams<{ strainId?: string }>();
 
     const fetchData = useCallback(async () => {
         const strainId = strainIdStr ? Number.parseInt(strainIdStr, 10) : null;
@@ -28,35 +22,61 @@ export default function StrainSavingForm() {
         ]);
     }, [strainIdStr]);
 
-    const { data, error, isPending } = useAsync(fetchData);
+    const { data, error: downloadError, isPending } = useAsync(fetchData);
 
-    const [genusList, typeList, strain] = data ?? [[], [], undefined];
+    return { data: data ?? [[], [], undefined], downloadError, isPending };
+};
 
-    console.log('strain loading:', strain);
+export default function StrainSavingForm() {
+    const { data, downloadError, isPending } = useBackendData();
+    const [uploadError, setUploadError] = useState<Error>();
+
+    const [genusList, typeList, strain] = data;
+
+    if (strain) {
+        strain.properties.sort((p1, p2) => p1.propertyId! - p2.propertyId!);
+        strain.properties.forEach((prop) => {
+            prop.ungroupedParameters?.sort((p1, p2) => p1.id! - p2.id!);
+            prop.groups?.sort((g1, g2) => g1.groupId! - g2.groupId!);
+            prop.groups?.forEach((group) =>
+                group.parameters.sort((p1, p2) => p1.id! - p2.id!)
+            );
+        });
+    }
+
+    let initValues: FormValues;
+    if (strain) {
+        const { properties, ...rest } = strain;
+        initValues = {
+            ...rest,
+            genus: strain.type.genus,
+            properties: {
+                bio: properties.filter((prop) => !prop.isNote) ?? [],
+                note: properties.filter((prop) => prop.isNote) ?? [],
+            },
+        };
+    } else {
+        const today = moment().format(DATE_FORMAT);
+        initValues = {
+            name: '',
+            dateReceiving: today,
+            collectionIndex: '',
+            source: '',
+            obtainingMethod: '',
+            dateAdded: today,
+            properties: { bio: [], note: [] },
+        };
+    }
 
     return (
         <div className='strain-adding'>
-            {isPending ? <p>Загрузка данных...</p> : null}
-            {error ? <p>`Ошибка при получении данных: ${error.message}`</p> : null}
+            {isPending && <p>Загрузка данных...</p>}
+            {downloadError && <p>Ошибка при получении данных: {downloadError.message}</p>}
+            {uploadError && <p>Ошибка при отправке данных: {uploadError.message}</p>}
 
             <Formik<FormValues>
                 enableReinitialize={true}
-                initialValues={{
-                    id: strain?.id,
-                    genus: strain?.type?.genus,
-                    type: strain?.type,
-                    name: strain?.name ?? '',
-                    dateReceiving: moment(strain?.dateReceiving).format(DATE_FORMAT),
-                    collectionIndex: strain?.collectionIndex ?? '',
-                    source: strain?.source ?? '',
-                    obtainingMethod: strain?.obtainingMethod ?? '',
-                    creator: strain?.creator,
-                    dateAdded: moment(strain?.dateAdded).format(DATE_FORMAT),
-                    properties: {
-                        bio: strain?.properties.filter((prop) => !prop.isNote) ?? [],
-                        note: strain?.properties.filter((prop) => prop.isNote) ?? [],
-                    },
-                }}
+                initialValues={initValues}
                 validationSchema={() => {
                     const requiredMsg = 'обязательно';
 
@@ -66,11 +86,13 @@ export default function StrainSavingForm() {
                                 .notOneOf([SelectField.UNSELECTED_VALUE], requiredMsg)
                                 .required(requiredMsg),
                         }),
-                        type: Yup.object().shape({
-                            name: Yup.string()
-                                .notOneOf([SelectField.UNSELECTED_VALUE], requiredMsg)
-                                .required(requiredMsg),
-                        }),
+                        type: Yup.object()
+                            .shape({
+                                name: Yup.string()
+                                    .notOneOf([SelectField.UNSELECTED_VALUE], requiredMsg)
+                                    .required(requiredMsg),
+                            })
+                            .required(requiredMsg),
                         name: Yup.string().required(requiredMsg),
                         dateReceiving: Yup.date().required(requiredMsg),
                         collectionIndex: Yup.string().required(requiredMsg),
@@ -81,29 +103,32 @@ export default function StrainSavingForm() {
                     });
                 }}
                 onSubmit={async (values, _helpers) => {
-                    const { genus: _, properties, ...rest } = values;
-                    const strain: Strain = {
+                    const { genus: _, type, properties, ...rest } = values;
+                    const strainData: Strain = {
+                        type: type!,
                         properties: [...properties.bio, ...properties.note],
                         ...rest,
                     };
 
-                    console.log('input:', strain);
-                    const returnedStrain = await API.strain.post(strain);
-                    console.log('output:', returnedStrain);
-
-                    // alert(JSON.stringify(values));
+                    try {
+                        console.log('input:', strainData);
+                        const returnedStrain = await API.strain.post(strainData);
+                        console.log('output:', returnedStrain);
+                        setUploadError(undefined);
+                    } catch (error) {
+                        setUploadError(error as Error);
+                    }
                 }}
             >
                 {({ values, setFieldValue, isSubmitting }) => {
                     // В случае, когда Род и Вид штамма созданы только что (не содержатся в базе), у них нет id.
                     // Тогда, если выбран Род без id, то надо вывести Вид без id
-                    const curTypeList = typeList.filter(
-                        ({ genus }) =>
-                            (!genus.id && !values.genus?.id) ||
-                            genus.id === values.genus?.id
-                    );
+                    const curTypeList = typeList.filter(({ genus }) => {
+                        const curGenusId = values.genus?.id;
+                        return (!genus.id && !curGenusId) || genus.id === curGenusId;
+                    });
 
-                    const disabled = isPending || !!error || isSubmitting;
+                    const disabled = isPending || !!downloadError || isSubmitting;
 
                     return (
                         <Form className='strain-form form--position-block-center'>
