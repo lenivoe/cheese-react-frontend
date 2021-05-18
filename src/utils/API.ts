@@ -7,7 +7,18 @@ import Strain, {
     StrainType,
 } from '../models/strain/strain';
 
-const defaultTimeout = 30000;
+const axiosInst = axios.create();
+
+const apiConfig = {
+    get baseURL() {
+        return axiosInst.defaults.baseURL;
+    },
+    set baseURL(url: string | undefined) {
+        axiosInst.defaults.baseURL = url;
+    },
+    defaultTimeout: 30000,
+};
+
 const timeoutMsg = (timeout: number) => `истекло время ожидания (${timeout / 1000}с)`;
 const getConfig = (timeout: number) => ({
     timeout,
@@ -16,26 +27,26 @@ const getConfig = (timeout: number) => ({
 
 class Generator {
     static get<T>(url: string) {
-        return async (timeout: number = defaultTimeout) => {
-            const response = await axios.get<T>(url, getConfig(timeout));
+        return async (timeout: number = apiConfig.defaultTimeout) => {
+            const response = await axiosInst.get<T>(url, getConfig(timeout));
             return response.data;
         };
     }
     static getById<T>(url: (id: number) => string) {
-        return async (id: number, timeout: number = defaultTimeout) => {
-            const response = await axios.get<T>(url(id), getConfig(timeout));
+        return async (id: number, timeout: number = apiConfig.defaultTimeout) => {
+            const response = await axiosInst.get<T>(url(id), getConfig(timeout));
             return response.data;
         };
     }
     static post<T>(url: string) {
-        return async (value: T, timeout: number = defaultTimeout) => {
-            const response = await axios.post<T>(url, value, getConfig(timeout));
+        return async (value: T, timeout: number = apiConfig.defaultTimeout) => {
+            const response = await axiosInst.post<T>(url, value, getConfig(timeout));
             return response.data;
         };
     }
     static deleteById<T>(url: (id: number) => string) {
-        return async (id: number, timeout: number = defaultTimeout) => {
-            const response = await axios.delete<T>(url(id), getConfig(timeout));
+        return async (id: number, timeout: number = apiConfig.defaultTimeout) => {
+            const response = await axiosInst.delete<T>(url(id), getConfig(timeout));
             return response.data;
         };
     }
@@ -81,6 +92,15 @@ const formalParameter = {
     delete: Generator.deleteById<FormalParameter>((id) => `/formal-parameter/${id}`),
 };
 
-const API = { strain, genus, type, property, dataType, formalParameter };
+const API = {
+    strain,
+    genus,
+    type,
+    property,
+    dataType,
+    formalParameter,
+
+    apiConfig,
+};
 
 export default API;

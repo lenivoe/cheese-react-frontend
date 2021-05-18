@@ -3,9 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import axios from 'axios';
+import API from './utils/API';
 
-axios.defaults.baseURL = 'http://localhost:8081';
+API.apiConfig.baseURL = 'http://localhost:8081';
+API.apiConfig.defaultTimeout = 30000;
 
 ReactDOM.render(
     <React.StrictMode>
