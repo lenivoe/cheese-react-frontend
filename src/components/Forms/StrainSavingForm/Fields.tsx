@@ -1,5 +1,5 @@
 import React from 'react';
-import { DATE_FORMAT } from '../../../models/strain/strain';
+import { DATE_FORMAT } from '../../../models/ParamDataType';
 import DateItem from '../Items/DateItem';
 import SelectItem from '../Items/SelectItem';
 import TextItem from '../Items/TextItem';

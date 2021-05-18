@@ -1,11 +1,10 @@
 import axios from 'axios';
-import Strain, {
-    FormalParameter,
-    Genus,
-    ParamDataType,
-    Property,
-    StrainType,
-} from '../models/strain/strain';
+import FormalParameter from '../models/FormalParameter';
+import Genus from '../models/Genus';
+import ParamDataType from '../models/ParamDataType';
+import FormalProperty from '../models/Property/FormalProperty';
+import Strain from '../models/Strain';
+import StrainType from '../models/StrainType';
 
 const axiosInst = axios.create();
 
@@ -74,11 +73,11 @@ const type = {
 };
 
 const property = {
-    getAll: Generator.get<Property[]>('/property'),
-    getAllWithParameters: Generator.get<Property[]>('/property/with_parameters'),
-    get: Generator.getById<Property>((id) => `/property/${id}`),
-    post: Generator.post<Property>('/property'),
-    delete: Generator.deleteById<Property>((id) => `/property/${id}`),
+    getAll: Generator.get<FormalProperty[]>('/property'),
+    getAllWithParameters: Generator.get<FormalProperty[]>('/property/with_parameters'),
+    get: Generator.getById<FormalProperty>((id) => `/property/${id}`),
+    post: Generator.post<FormalProperty>('/property'),
+    delete: Generator.deleteById<FormalProperty>((id) => `/property/${id}`),
 };
 
 const dataType = {

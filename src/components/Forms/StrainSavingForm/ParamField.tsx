@@ -1,5 +1,5 @@
 import React from 'react';
-import { FacticalParameter } from '../../../models/strain/strain';
+import FacticalParameter from '../../../models/FacticalParameter';
 import { TextField, SelectField, DateField } from './Fields';
 
 export interface ParamFieldProps {
