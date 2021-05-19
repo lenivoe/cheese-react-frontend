@@ -1,8 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useAsync } from 'react-async';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import moment from 'moment';
 import API from '../../../utils/API';
 import Strain from '../../../models/Strain';
@@ -10,23 +7,8 @@ import { DATE_FORMAT } from '../../../models/ParamDataType';
 import { DateField, SelectField, TextField } from './Fields';
 import PropertiesList from './PropertiesList';
 import FormValues from './FormValues';
-
-const useBackendData = () => {
-    const { strainId: strainIdStr } = useParams<{ strainId?: string }>();
-
-    const fetchData = useCallback(async () => {
-        const strainId = strainIdStr ? Number.parseInt(strainIdStr, 10) : null;
-        return Promise.all([
-            API.genus.getAll(),
-            API.type.getAll(),
-            strainId ? API.strain.get(strainId) : undefined,
-        ]);
-    }, [strainIdStr]);
-
-    const { data, error: downloadError, isPending } = useAsync(fetchData);
-
-    return { data: data ?? [[], [], undefined], downloadError, isPending };
-};
+import useBackendData from './useBackendData';
+import validationSchema from './validationSchema';
 
 export default function StrainSavingForm() {
     const { data, downloadError, isPending } = useBackendData();
@@ -78,43 +60,15 @@ export default function StrainSavingForm() {
             <Formik<FormValues>
                 enableReinitialize={true}
                 initialValues={initValues}
-                validationSchema={() => {
-                    const requiredMsg = 'обязательно';
-
-                    return Yup.object({
-                        genus: Yup.object().shape({
-                            name: Yup.string()
-                                .notOneOf([SelectField.UNSELECTED_VALUE], requiredMsg)
-                                .required(requiredMsg),
-                        }),
-                        type: Yup.object()
-                            .shape({
-                                name: Yup.string()
-                                    .notOneOf([SelectField.UNSELECTED_VALUE], requiredMsg)
-                                    .required(requiredMsg),
-                            })
-                            .required(requiredMsg),
-                        name: Yup.string().required(requiredMsg),
-                        dateReceiving: Yup.date().required(requiredMsg),
-                        collectionIndex: Yup.string().required(requiredMsg),
-                        source: Yup.string().required(requiredMsg),
-                        obtainingMethod: Yup.string().required(requiredMsg),
-                        creator: Yup.string().notRequired(),
-                        dateAdded: Yup.date().required(requiredMsg),
-                    });
-                }}
-                onSubmit={async (values, _helpers) => {
-                    const { genus: _, type, properties, ...rest } = values;
-                    const strainData: Strain = {
-                        type: type!,
-                        properties: [...properties.bio, ...properties.note],
-                        ...rest,
-                    };
-
+                validationSchema={validationSchema}
+                onSubmit={async ({ genus: _, type, properties, ...rest }) => {
                     try {
-                        console.log('input:', strainData);
-                        const returnedStrain = await API.strain.post(strainData);
-                        console.log('output:', returnedStrain);
+                        const strainData: Strain = {
+                            type: type!,
+                            properties: [...properties.bio, ...properties.note],
+                            ...rest,
+                        };
+                        await API.strain.post(strainData);
                         setUploadError(undefined);
                     } catch (error) {
                         setUploadError(error as Error);
