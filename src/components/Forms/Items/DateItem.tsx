@@ -24,7 +24,7 @@ export default function DateItem({
         `Field '${props.name}' must use onValueChange instead onChange`
     );
 
-    const [cssId] = useState(nanoid());
+    const [cssId] = useState(nanoid);
     const { setFieldValue } = useFormikContext();
 
     // обычный onChange не работает

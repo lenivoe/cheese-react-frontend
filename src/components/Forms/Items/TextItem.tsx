@@ -17,7 +17,7 @@ export default function TextItem({
         `Field '${props.name}' must use onValueChange instead onChange`
     );
 
-    const [cssId] = useState(nanoid());
+    const [cssId] = useState(nanoid);
     const [{ onChange, ...field }] = useField(props);
     const { placeholder, type, disabled } = props;
 

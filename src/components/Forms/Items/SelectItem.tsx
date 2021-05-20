@@ -22,7 +22,7 @@ function SelectItem({
         `Field '${props.name}' must use onValueChange instead onChange`
     );
 
-    const [cssId] = useState(nanoid());
+    const [cssId] = useState(nanoid);
     const [{ value = SelectItem.UNSELECTED_VALUE, onChange, ...field }] = useField(props);
     const { children, disabled } = props;
 
