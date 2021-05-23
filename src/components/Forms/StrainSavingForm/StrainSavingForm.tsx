@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Formik } from 'formik';
 import moment from 'moment';
-import API from '../../../utils/API';
-import Strain from '../../../models/Strain';
 import { DATE_FORMAT } from '../../../models/ParamDataType';
 import { DateField, SelectField, TextField } from './Fields';
 import PropertiesList from './PropertiesList';
-import FormValues from './FormValues';
-import useBackendData from './useBackendData';
+import StrainSavingFormValues from './StrainSavingFormValues';
+import { useDownloadData, useUploadStrain } from './BackendDataHooks';
 import validationSchema from './validationSchema';
 
 export default function StrainSavingForm() {
-    const { data, downloadError, isPending } = useBackendData();
-    const [uploadError, setUploadError] = useState<Error>();
+    const download = useDownloadData();
+    const upload = useUploadStrain();
 
-    const [genusList, typeList, strain] = data;
+    const [genusList, typeList, strain] = download.data ?? [[], [], undefined];
 
     if (strain) {
         strain.properties.sort((p1, p2) => p1.propertyId! - p2.propertyId!);
@@ -27,7 +25,7 @@ export default function StrainSavingForm() {
         });
     }
 
-    let initValues: FormValues;
+    let initValues: StrainSavingFormValues;
     if (strain) {
         const { properties, ...rest } = strain;
         initValues = {
@@ -53,29 +51,27 @@ export default function StrainSavingForm() {
 
     return (
         <div className='strain-adding'>
-            {isPending && <p>Загрузка данных...</p>}
-            {downloadError && <p>Ошибка при получении данных: {downloadError.message}</p>}
-            {uploadError && <p>Ошибка при отправке данных: {uploadError.message}</p>}
+            {download.isPending && <p>Загрузка данных...</p>}
+            {download.error && (
+                <p>Ошибка при получении данных: {download.error.message}</p>
+            )}
+            {upload.isPending && <p>Сохранение данных...</p>}
+            {upload.error && <p>Ошибка при отправке данных: {upload.error.message}</p>}
 
-            <Formik<FormValues>
+            <Formik<StrainSavingFormValues>
                 enableReinitialize={true}
                 initialValues={initValues}
                 validationSchema={validationSchema}
-                onSubmit={async ({ genus: _, type, properties, ...rest }) => {
-                    try {
-                        const strainData: Strain = {
-                            type: type!,
-                            properties: [...properties.bio, ...properties.note],
-                            ...rest,
-                        };
-                        await API.strain.post(strainData);
-                        setUploadError(undefined);
-                    } catch (error) {
-                        setUploadError(error as Error);
-                    }
+                onSubmit={({ genus: _, type, properties, ...rest }) => {
+                    const strainData = {
+                        type: type!,
+                        properties: [...properties.bio, ...properties.note],
+                        ...rest,
+                    };
+                    upload.run(strainData);
                 }}
             >
-                {({ values, setFieldValue, isSubmitting }) => {
+                {({ values, setFieldValue }) => {
                     // В случае, когда Род и Вид штамма созданы только что (не содержатся в базе), у них нет id.
                     // Тогда, если выбран Род без id, то надо вывести Вид без id
                     const curTypeList = typeList.filter(({ genus }) => {
@@ -83,7 +79,7 @@ export default function StrainSavingForm() {
                         return (!genus.id && !curGenusId) || genus.id === curGenusId;
                     });
 
-                    const disabled = isPending || !!downloadError || isSubmitting;
+                    const disabled = !download.isFulfilled || upload.isPending;
 
                     return (
                         <Form className='strain-form form--position-block-center'>

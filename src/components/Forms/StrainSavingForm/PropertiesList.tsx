@@ -1,15 +1,15 @@
 import React from 'react';
 import { FieldArray, useFormikContext } from 'formik';
-import FormValues from './FormValues';
+import StrainSavingFormValues from './StrainSavingFormValues';
 import ParamField from './ParamField';
 import PropertyItem from './PropertyItem';
 
 export interface PropertiesListProps {
-    propType: keyof FormValues['properties'];
+    propType: keyof StrainSavingFormValues['properties'];
 }
 
 export default function PropertiesList({ propType: type }: PropertiesListProps) {
-    const { values } = useFormikContext<FormValues>();
+    const { values } = useFormikContext<StrainSavingFormValues>();
 
     return (
         <FieldArray name={type}>

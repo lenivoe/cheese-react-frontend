@@ -3,3 +3,7 @@ export function delay(ms: number) {
         setTimeout(resolve, ms);
     });
 }
+
+export interface AnyObj {
+    [key: string]: any;
+}
