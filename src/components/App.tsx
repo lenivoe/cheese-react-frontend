@@ -5,7 +5,7 @@ import Header from './Header';
 import BlockMenu from './Forms/BlockMenu';
 import StrainSavingForm from './Forms/StrainSavingForm/StrainSavingForm';
 import MicroorganismsCatalog from './Forms/MicroorganismsCatalog';
-import PropertyEditForm from './Forms/PropertyEditForm';
+import PropertyEditForm from './Forms/PropertyEditForm/PropertyEditForm';
 import useMenuState from '../hooks/useMenuState';
 
 function App() {
