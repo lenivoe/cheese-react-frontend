@@ -1,5 +1,6 @@
 .strain-adding {
   display: flex;
+  flex-direction: column;
   position: relative;
 
   &__buttons {
@@ -48,7 +49,7 @@
 .strain-form {
 
   &__general-info {
-    padding-right: 67px;
+    padding-right: 25px;
   }
 
   &__item {
@@ -64,16 +65,42 @@
   }
 }
 
+.base-field {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__buttons-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+  }
+
+
+  &__add-button{
+
+  }
+
+  .form__field{
+    margin-bottom: 0;
+  }
+}
 
 .property {
   margin-top: 35px;
+  margin-bottom: 100px;
+
+  &:last-child {
+    margin-bottom: 50px;
+  }
 
   &__title {
     margin-bottom: 10px;
     text-align: center;
     font-weight: 700;
   }
-
 
   &__group {
     display: flex;
@@ -88,10 +115,23 @@
   }
 
   &__buttons-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__delete-button {
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+}
+
+.property-group {
+
+  &__buttons-block {
     width: 62px;
     margin-bottom: 10px;
     margin-left: 5px;
-
   }
 
   &__delete-button {
@@ -109,5 +149,34 @@
   &__add-button-block {
     display: flex;
     justify-content: flex-end;
+  }
+}
+
+
+.add-property-block {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 50px;
+
+  &__label {
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+
+  &__select {
+    padding: 5px;
+    border-radius: 5px;
+    width: 300px;
+
+    background-color: $item-fon-color;
+
+  }
+
+  &__button {
+    border-radius: 5px;
+    padding: 5px 10px;
   }
 }

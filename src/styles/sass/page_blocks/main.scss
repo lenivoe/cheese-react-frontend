@@ -1,20 +1,47 @@
 .main {
   background-color: $fon-color;
+
   &__content {
     display: flex;
   }
 }
 
-.main-content{
-  &__menu{
-    width: 33%;
+.main-content {
+  &__menu {
+    position: fixed;
+    z-index: 1000;
+    top: 49px;
+    width: 280px;
   }
 
-  &__data{
-    padding-top: 30px;
+  &__data {
+    position: relative;
+    padding-top: 60px;
     min-height: 93vh;
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
   }
+}
+
+.loading {
+  color: #000000;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.field-error {
+  color: #ff5858;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-error{
+  text-align: right;
+  color: red;
+  margin-bottom: 30px;
 }

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { SelectField } from './Fields';
 
-const requiredMsg = 'обязательно';
+const requiredMsg = 'обязательное поле';
 
 const validationSchema = Yup.object({
     genus: Yup.object().shape({

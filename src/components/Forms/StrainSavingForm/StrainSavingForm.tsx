@@ -51,9 +51,9 @@ export default function StrainSavingForm() {
     }
 
     return (
+
         <div className='strain-adding'>
             <FormErrorMessage download={download} upload={upload} />
-
             <Formik<StrainSavingFormValues>
                 enableReinitialize={true}
                 initialValues={initValues}

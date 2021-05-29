@@ -4,6 +4,12 @@
   font-size: 20px;
   min-height: 6vh;
 
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+
   &__menu-button{
     cursor: pointer;
 

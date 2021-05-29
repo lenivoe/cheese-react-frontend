@@ -10,7 +10,7 @@ import useMenuState from '../hooks/useMenuState';
 
 function App() {
     const { items, active, visible, toggleVisible } = useMenuState();
-
+    const fromLeftClass = visible ? ' data-from-left' : ''
     return (
         <>
             <Header
@@ -23,7 +23,7 @@ function App() {
                 <div className='main__content main-content'>
                     <BlockMenu active={active} items={items} visible={visible} />
 
-                    <div className='main-content__data'>
+                    <div className={'main-content__data' + fromLeftClass}>
                         <Switch>
                             <Route path='/catalog' component={MicroorganismsCatalog} />
                             <Route path='/strain/add' component={StrainSavingForm} />
