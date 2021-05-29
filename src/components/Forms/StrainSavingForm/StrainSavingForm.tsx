@@ -7,6 +7,7 @@ import PropertiesList from './PropertiesList';
 import StrainSavingFormValues from './StrainSavingFormValues';
 import { useDownloadData, useUploadStrain } from './BackendDataHooks';
 import validationSchema from './validationSchema';
+import FormErrorMessage from '../Items/FormErrorMessage';
 
 export default function StrainSavingForm() {
     const download = useDownloadData();
@@ -51,12 +52,7 @@ export default function StrainSavingForm() {
 
     return (
         <div className='strain-adding'>
-            {download.isPending && <p>Загрузка данных...</p>}
-            {download.error && (
-                <p>Ошибка при получении данных: {download.error.message}</p>
-            )}
-            {upload.isPending && <p>Сохранение данных...</p>}
-            {upload.error && <p>Ошибка при отправке данных: {upload.error.message}</p>}
+            <FormErrorMessage download={download} upload={download} />
 
             <Formik<StrainSavingFormValues>
                 enableReinitialize={true}

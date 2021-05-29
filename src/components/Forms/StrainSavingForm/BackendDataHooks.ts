@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAsync } from 'react-async';
 import { useParams } from 'react-router-dom';
 import Strain from '../../../models/Strain';
