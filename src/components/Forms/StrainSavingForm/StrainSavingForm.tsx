@@ -139,21 +139,21 @@ export default function StrainSavingForm() {
                                 <PropertiesList propType='bio' />
                                 <PropertiesList propType='note' />
 
-                                <div className='strain-adding__buttons form-buttons'>
-                                    <button
-                                        type='submit'
-                                        className='form-buttons__submit-button form-button submit-button'
-                                    >
-                                        Добавить
-                                    </button>
-                                    <button
-                                        type='button'
-                                        className='form-buttons__cancel-button form-button cancel-button'
-                                    >
-                                        Отмена
-                                    </button>
-                                </div>
                             </fieldset>
+                            <div className='strain-adding__buttons form-buttons'>
+                                <button
+                                    type='submit'
+                                    className='form-buttons__submit-button form-button submit-button add-button'
+                                >
+                                    Добавить
+                                </button>
+                                <button
+                                    type='button'
+                                    className='form-buttons__cancel-button form-button cancel-button delete-button'
+                                >
+                                    Отмена
+                                </button>
+                            </div>
                         </Form>
                     );
                 }}

@@ -4,47 +4,47 @@
   position: relative;
 
   &__buttons {
+    z-index: 10000;
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
-
-    font-size: 18px;
+    height: 36px;
+    font-size: 16px;
     position: fixed;
-    right: 8%;
+    right: 270px;
+    top: 8px;
 
-    .form-button:first-child {
-      margin-bottom: 10px;
+    .form-button:first-child{
+      margin-right: 10px;
     }
   }
 }
 
-
-@media (max-width: 1220px) {
+@media (max-width: 1400px) {
   .strain-adding {
     &__buttons {
-      font-size: 18px;
-      right: 6%;
+      right: 220px;
     }
   }
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1250px) {
   .strain-adding {
     &__buttons {
-      font-size: 18px;
-      right: 4%;
+      right: 150px;
     }
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1050px) {
   .strain-adding {
     &__buttons {
-      font-size: 18px;
-      right: 1%;
+      right: 50px;
     }
   }
 }
+
+
+
 
 .strain-form {
 
@@ -79,11 +79,11 @@
   }
 
 
-  &__add-button{
+  &__add-button {
 
   }
 
-  .form__field{
+  .form__field {
     margin-bottom: 0;
   }
 }
