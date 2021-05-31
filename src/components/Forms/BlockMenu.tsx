@@ -13,8 +13,11 @@ interface BlockMenuProps {
     visible?: boolean;
 }
 
-const BlockMenu = ({ active, items, visible = true }: BlockMenuProps) =>
-    !visible ? null : (
+const BlockMenu = ({ active, items, visible = true }: BlockMenuProps) => {
+    if (!visible) {
+        return null;
+    }
+    return (
         <div className='main-content__menu'>
             <div className='menu'>
                 {items.map(({ id, label, url }) => (
@@ -25,7 +28,7 @@ const BlockMenu = ({ active, items, visible = true }: BlockMenuProps) =>
             </div>
         </div>
     );
-
+};
 interface MenuItemProps {
     label: string;
     active: boolean;
