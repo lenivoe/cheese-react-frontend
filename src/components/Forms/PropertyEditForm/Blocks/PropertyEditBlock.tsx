@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormikProps } from 'formik';
+import {FormikProps} from 'formik';
 import ButtonItem from '../../Items/ButtonItem';
 import PropertyEditFormValues from '../PropertyEditFormValues';
 import PropOrParamList from './PropOrParamList';
@@ -10,13 +10,13 @@ const btnClassName = (part: string, isActive: boolean) => {
 };
 
 export default function PropertyEditBlock({
-    values: { state },
-    setFieldValue,
-}: FormikProps<PropertyEditFormValues>) {
+                                              values: {state},
+                                              setFieldValue,
+                                          }: FormikProps<PropertyEditFormValues>) {
     return (
         <div className='property-edit__info-block info-block'>
-            <PropOrParamList title='Свойства' cssPrefix='properties' name='property' />
-            <PropOrParamList title='Параметры' cssPrefix='parameters' name='parameter' />
+            <PropOrParamList title='Свойства' cssPrefix='properties' name='property'/>
+            <PropOrParamList title='Параметры' cssPrefix='parameters' name='parameter'/>
 
             <div className='property-edit__property-info property-info'></div>
 
@@ -31,6 +31,7 @@ export default function PropertyEditBlock({
                     <ButtonItem
                         label='Добавить свойство'
                         className={btnClassName('add-property', state === 'ADD_PROP')}
+                        disabled={true}
                         onClick={() => setFieldValue('state', 'ADD_PROP')}
                     />
                     <ButtonItem
