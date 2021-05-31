@@ -79,54 +79,16 @@ function TypeList() {
 
     return (
         <div className="types-list-block">
-            {typeList
-                .map((type) => (
-                    <ul className="types-list big-list">
-
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {"Type name here"}
-                            </Link>
-                        </li>
+            <ul className="types-list big-list">
+                {typeList
+                    .map((type) => (
                         <li className="types-list__item big-list__item" key={type.id}>
                             <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
                                 {type.name}
                             </Link>
                         </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {"Type name here"}
-                            </Link>
-                        </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {type.name}
-                            </Link>
-                        </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {"Type name here"}
-                            </Link>
-                        </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {type.name}
-                            </Link>
-                        </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {"Type name here"}
-                            </Link>
-                        </li>
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {type.name}
-                            </Link>
-                        </li>
-
-                    </ul>
-
-                ))}
+                    ))}
+            </ul>
         </div>
     );
 }
@@ -148,67 +110,17 @@ function StrainList() {
 
     return (
         <nav>
-
-            {strainList
-                .map((strain) => (
-                    <ul className="strains-list big-list">
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strain-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
+            <ul className="strains-list big-list">
+                {strainList
+                    .map((strain) => (
                         <li className="big-list__item strains-list__item" key={strain.id}>
                             <Link className="strains-list__link strains-link"
                                   to={join('/strain', strain.id!.toString(), 'edit')}>
                                 {strain.name}
                             </Link>
                         </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                    </ul>
-                ))}
-
+                    ))}
+            </ul>
         </nav>
     );
 }

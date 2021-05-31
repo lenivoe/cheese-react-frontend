@@ -116,7 +116,7 @@ export default function StrainSavingForm() {
                                 </SelectField>
 
                                 {/* часть наименования */}
-                                <TextField label='Исхродный индекс' name='name' />
+                                <TextField label='Исходный индекс' name='name' />
                                 {/* часть наименования */}
                                 <DateField
                                     label='Дата получения'
