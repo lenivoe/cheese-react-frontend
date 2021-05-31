@@ -65,3 +65,13 @@ button {
     justify-content: right;
   }
 }
+
+.delete-list-item-button{
+  display: block;
+  padding: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  border-radius: 5px;
+
+  cursor: pointer;
+}

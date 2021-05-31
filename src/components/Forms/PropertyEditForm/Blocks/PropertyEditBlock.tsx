@@ -53,17 +53,6 @@ export default function PropertyEditBlock({
                         onClick={() => setFieldValue('state', 'EDIT_PARAM')}
                     />
                 </div>
-
-                <div className='form-menu__delete-buttons form-menu__buttons-block'>
-                    <ButtonItem
-                        label='Удалить свойство'
-                        className={btnClassName('delete-property', false)}
-                    />
-                    <ButtonItem
-                        label='Удалить параметр'
-                        className={btnClassName('delete-parameter', false)}
-                    />
-                </div>
             </div>
         </div>
     );

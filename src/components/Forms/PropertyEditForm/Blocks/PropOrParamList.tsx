@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormikContext } from 'formik';
 import List, { ListProps } from '../../Items/List';
 import PropertyEditFormValues from '../PropertyEditFormValues';
+import ButtonItem from "../../Items/ButtonItem";
 
 interface PropOrParamListProps {
     title: string;
@@ -41,6 +42,10 @@ export default function PropOrParamList(props: PropOrParamListProps) {
                     ))}
                 </List>
             </div>
+            <ButtonItem
+                label='Удалить свойство'
+                className="delete-list-item-button delete-button"
+            />
         </div>
     );
 }
