@@ -1,17 +1,24 @@
 import React, { useCallback } from 'react';
-import { useField, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
+import assert from 'assert';
 
-interface ListProps {
+export interface ListProps {
     name: string;
+    value?: string;
     valueList: string[];
-    children?: React.ReactNode;
+    children: React.ReactNode;
     className?: string;
     onSelect?: (name: string, value: string) => void;
 }
 
 export default function List(props: ListProps) {
-    const { name, valueList, className, children, onSelect } = props;
-    const [{ value }] = useField(name);
+    assert(React.Children.count(props.children) === props.valueList.length);
+
+    const { name, value, valueList, className, children, onSelect } = props;
+
+    console.log('>>>', name);
+    console.log('valueList: ', valueList);
+    console.log('value: ', value);
 
     return (
         <div className={className}>

@@ -12,9 +12,9 @@ function SelectItem({
     placeholder = '<не задано>',
     label,
     onValueChange,
-    wrapClass,
-    labelClass,
-    inputClass,
+    className,
+    labelClassName,
+    inputClassName,
     ...props
 }: SelectItemExtraProps & FormItemProps) {
     assert(
@@ -33,14 +33,14 @@ function SelectItem({
     );
 
     return (
-        <div className={wrapClass + ' form__field'}>
-            <label htmlFor={cssId} className={labelClass + ' form-label'}>
+        <div className={className + ' form__field'}>
+            <label htmlFor={cssId} className={labelClassName + ' form-label'}>
                 {label}
             </label>
             <select
                 {...field}
                 id={cssId}
-                className={inputClass + ' form-input'}
+                className={inputClassName + ' form-input'}
                 value={value}
                 disabled={disabled || React.Children.count(children) === 0}
                 onChange={onSelectChange}

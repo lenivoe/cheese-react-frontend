@@ -1,9 +1,12 @@
 import { FieldHookConfig } from 'formik';
 
-export interface StyleProps {
-    wrapClass?: string;
-    labelClass?: string;
-    inputClass?: string;
+export interface WithCssClass {
+    className?: string;
+}
+
+export interface CompositeWithCssClass extends WithCssClass {
+    labelClassName?: string;
+    inputClassName?: string;
 }
 
 export interface ExtraItemProps {
@@ -11,6 +14,6 @@ export interface ExtraItemProps {
     onValueChange?: (name: string, value: string) => void;
 }
 
-type FormItemProps = FieldHookConfig<string> & StyleProps & ExtraItemProps;
+type FormItemProps = FieldHookConfig<string> & CompositeWithCssClass & ExtraItemProps;
 
 export default FormItemProps;

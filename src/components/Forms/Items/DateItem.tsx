@@ -14,9 +14,9 @@ export default function DateItem({
     format = 'YYYY-MM-DD',
     label,
     onValueChange,
-    wrapClass,
-    labelClass,
-    inputClass,
+    className,
+    labelClassName,
+    inputClassName,
     ...props
 }: DateItemExtraProps & FormItemProps) {
     assert(
@@ -40,14 +40,14 @@ export default function DateItem({
     );
 
     return (
-        <div className={wrapClass + ' form__field'}>
-            <label htmlFor={cssId} className={labelClass + ' form-label'}>
+        <div className={className + ' form__field'}>
+            <label htmlFor={cssId} className={labelClassName + ' form-label'}>
                 {label}
             </label>
             <RusDatePicker
                 {...field}
                 id={cssId}
-                className={inputClass + ' form-input'}
+                className={inputClassName + ' form-input'}
                 selected={new Date(moment(value).format(format))}
                 onChange={onDateChange}
                 disabled={disabled}

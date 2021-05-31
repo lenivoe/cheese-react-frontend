@@ -7,9 +7,9 @@ import FormItemProps from './FormItemProps';
 export default function TextItem({
     label,
     onValueChange,
-    wrapClass,
-    labelClass,
-    inputClass,
+    className,
+    labelClassName,
+    inputClassName,
     ...props
 }: FormItemProps) {
     assert(
@@ -28,14 +28,14 @@ export default function TextItem({
     );
 
     return (
-        <div className={wrapClass + ' form__field'}>
-            <label htmlFor={cssId} className={labelClass + ' form-label'}>
+        <div className={className + ' form__field'}>
+            <label htmlFor={cssId} className={labelClassName + ' form-label'}>
                 {label}
             </label>
             <input
                 {...field}
                 id={cssId}
-                className={inputClass + ' form-input'}
+                className={inputClassName + ' form-input'}
                 placeholder={placeholder}
                 type={type}
                 disabled={disabled}
