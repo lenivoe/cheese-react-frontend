@@ -16,10 +16,6 @@ export default function List(props: ListProps) {
 
     const { name, value, valueList, className, children, onSelect } = props;
 
-    console.log('>>>', name);
-    console.log('valueList: ', valueList);
-    console.log('value: ', value);
-
     return (
         <div className={className}>
             {React.Children.map(children, (child, i) => (

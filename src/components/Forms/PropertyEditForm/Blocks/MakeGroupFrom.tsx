@@ -1,4 +1,11 @@
-export default function MakeGroupFrom() {
+interface MakeGroupFromProps {
+    visible?: boolean;
+}
+
+export default function MakeGroupFrom({ visible = true }: MakeGroupFromProps) {
+    if (!visible) {
+        return null;
+    }
     return (
         <div className='make-group-form'>
             <div className='make-group-form__top'>

@@ -1,24 +1,32 @@
 import React from 'react';
-import {FormikProps} from 'formik';
+import { FormikProps } from 'formik';
 import ButtonItem from '../../Items/ButtonItem';
 import PropertyEditFormValues from '../PropertyEditFormValues';
-import PropOrParamList from './PropOrParamList';
+import PropertyList from './PropertyList';
+import ParameterList from './ParameterList';
 
 const btnClassName = (part: string, isActive: boolean) => {
     const active = isActive ? 'active' : '';
     return `form-menu__${part}-button form-menu__button ${active}`;
 };
 
-export default function PropertyEditBlock({
-                                              values: {state},
-                                              setFieldValue,
-                                          }: FormikProps<PropertyEditFormValues>) {
+export default function PropertyEditBlock(props: FormikProps<PropertyEditFormValues>) {
+    const {
+        values: { state },
+        setFieldValue,
+    } = props;
+
     return (
         <div className='property-edit__info-block info-block'>
-            <PropOrParamList title='Свойства' cssPrefix='properties' name='property'/>
-            <PropOrParamList title='Параметры' cssPrefix='parameters' name='parameter'/>
-
-            <div className='property-edit__property-info property-info'></div>
+            <PropertyList
+                name='propInfo.selected.id'
+                paramListName='paramInfo.selected.id'
+                {...props}
+            />
+            <ParameterList
+                name='paramInfo.selected.id'
+                {...props}
+            />
 
             <div className='property-edit__form-menu form-menu'>
                 <ButtonItem
@@ -31,8 +39,8 @@ export default function PropertyEditBlock({
                     <ButtonItem
                         label='Добавить свойство'
                         className={btnClassName('add-property', state === 'ADD_PROP')}
-                        disabled={true}
                         onClick={() => setFieldValue('state', 'ADD_PROP')}
+                        // disabled={true}
                     />
                     <ButtonItem
                         label='Добавить параметр'
@@ -46,7 +54,6 @@ export default function PropertyEditBlock({
                         label='Изменить свойство'
                         className={btnClassName('edit-property', state === 'EDIT_PROP')}
                         onClick={() => setFieldValue('state', 'EDIT_PROP')}
-                        // disabled={true}
                     />
                     <ButtonItem
                         label='Изменить параметр'

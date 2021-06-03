@@ -3,16 +3,23 @@ interface FormErrorMessageProps {
     upload: { isPending: boolean; error?: Error };
 }
 
-const FormErrorMessage = ({download, upload}: FormErrorMessageProps) => (
+const FormErrorMessage = ({ download, upload }: FormErrorMessageProps) => (
     <>
-        <div className="loading">
-            {download.isPending && <p>Загрузка данных...</p>}
-            {upload.isPending && <p>Сохранение данных...</p>}
-        </div>
-        <div className="field-error">
-            {download.error && <p>Ошибка при получении данных: {download.error.message}</p>}
-            {upload.error && <p>Ошибка при отправке данных: {upload.error.message}</p>}
-        </div>
+        {download.isPending && <div className='loading'>Загрузка данных...</div>}
+        
+        {upload.isPending && <div className='loading'>Сохранение данных...</div>}
+
+        {download.error && (
+            <div className='field-error'>
+                Ошибка при получении данных: {download.error.message}
+            </div>
+        )}
+
+        {upload.error && (
+            <div className='field-error'>
+                Ошибка при отправке данных: {upload.error.message}
+            </div>
+        )}
     </>
 );
 
