@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5f7c1915.chunk.css",
+    "main.js": "/static/js/main.6ceccbf6.chunk.js",
+    "main.js.map": "/static/js/main.6ceccbf6.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.9c603861.js",
+    "runtime-main.js.map": "/static/js/runtime-main.9c603861.js.map",
+    "static/css/2.0cfad52a.chunk.css": "/static/css/2.0cfad52a.chunk.css",
+    "static/js/2.635b7e69.chunk.js": "/static/js/2.635b7e69.chunk.js",
+    "static/js/2.635b7e69.chunk.js.map": "/static/js/2.635b7e69.chunk.js.map",
+    "static/js/3.dcf06e25.chunk.js": "/static/js/3.dcf06e25.chunk.js",
+    "static/js/3.dcf06e25.chunk.js.map": "/static/js/3.dcf06e25.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.0cfad52a.chunk.css.map": "/static/css/2.0cfad52a.chunk.css.map",
+    "static/css/main.5f7c1915.chunk.css.map": "/static/css/main.5f7c1915.chunk.css.map",
+    "static/js/2.635b7e69.chunk.js.LICENSE.txt": "/static/js/2.635b7e69.chunk.js.LICENSE.txt",
+    "static/media/main.sass": "/static/media/roboto-regular-webfont.280536e0.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9c603861.js",
+    "static/css/2.0cfad52a.chunk.css",
+    "static/js/2.635b7e69.chunk.js",
+    "static/css/main.5f7c1915.chunk.css",
+    "static/js/main.6ceccbf6.chunk.js"
+  ]
+}
