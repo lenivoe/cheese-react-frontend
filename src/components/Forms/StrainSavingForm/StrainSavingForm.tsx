@@ -159,21 +159,46 @@ export default function StrainSavingForm() {
 
                                 <PropertiesList propType='bio' />
                                 <PropertiesList propType='note' />
+
+                                {/* без логиги */}
+                                <div className='add-property-block'>
+                                    <label
+                                        className='add-property-block__label'
+                                        htmlFor='add-property-block__select'
+                                    >
+                                        Все свойства
+                                    </label>
+                                    <select
+                                        className='add-property-block__select'
+                                        name='property-data'
+                                        id='add-property-block__select'
+                                    >
+                                        <option value='1'>свойство 1</option>
+                                        <option value='2'>свойство 2</option>
+                                        <option value='3'>свойство 3</option>
+                                        <option value='4'>свойство 4</option>
+                                    </select>
+                                    <button className='add-property-block__button add-button'>
+                                        добавить
+                                    </button>
+                                </div>
+                                {/* без логиги */}
+
+                                <div className='strain-adding__buttons form-buttons'>
+                                    <button
+                                        type='submit'
+                                        className='form-buttons__submit-button form-button submit-button add-button'
+                                    >
+                                        Сохранить
+                                    </button>
+                                    <button
+                                        type='button'
+                                        className='form-buttons__cancel-button form-button cancel-button delete-button'
+                                    >
+                                        Отмена
+                                    </button>
+                                </div>
                             </fieldset>
-                            <div className='strain-adding__buttons form-buttons'>
-                                <button
-                                    type='submit'
-                                    className='form-buttons__submit-button form-button submit-button add-button'
-                                >
-                                    Сохранить
-                                </button>
-                                <button
-                                    type='button'
-                                    className='form-buttons__cancel-button form-button cancel-button delete-button'
-                                >
-                                    Отмена
-                                </button>
-                            </div>
                         </Form>
                     );
                 }}
