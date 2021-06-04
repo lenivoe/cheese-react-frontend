@@ -72,7 +72,7 @@ export default function PropertyEditForm() {
                     })
                 }
                 onSubmit={(values) => {
-                    console.log('values', values);
+                    console.log('values', JSON.parse(JSON.stringify(values)));
 
                     const { propInfo, paramInfo } = values;
                     for (const info of [propInfo, paramInfo]) {

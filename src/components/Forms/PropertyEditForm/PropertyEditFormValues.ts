@@ -1,5 +1,5 @@
 import FormalParameter from '../../../models/FormalParameter';
-import FormalProperty from '../../../models/Property/FormalProperty';
+import Property from '../../../models/Property/Property';
 
 interface Info<T extends { id?: any }> {
     saving?: Omit<T, 'id'>;
@@ -7,9 +7,12 @@ interface Info<T extends { id?: any }> {
     selected: { id?: T['id'] };
 }
 
+type Param = FormalParameter & { isUsing: boolean };
+type Prop = Property<Param> & { isUsing: boolean };
+
 export default interface PropertyEditFormValues {
-    propInfo: Info<FormalProperty>;
-    paramInfo: Info<FormalParameter>;
-    propList?: FormalProperty[];
+    propInfo: Info<Param>;
+    paramInfo: Info<Param>;
+    propList?: Prop[];
     state: 'ADD_PROP' | 'EDIT_PROP' | 'ADD_PARAM' | 'EDIT_PARAM' | 'EDIT_GROUPS' | 'NONE';
 }

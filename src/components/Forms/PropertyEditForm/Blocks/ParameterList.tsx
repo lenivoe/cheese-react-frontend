@@ -28,8 +28,10 @@ export default function ParameterList(props: ParameterListProps) {
     );
 
     const onDelete = useCallback(
-        (name: string, value?: string) =>
-            setFieldValue('paramInfo.removing.id', value && parseInt(value)),
+        (name: string, value?: string) => {
+            console.log('param del', value)
+            setFieldValue('paramInfo.removing.id', value && parseInt(value));
+        },
         [setFieldValue]
     );
 

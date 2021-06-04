@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Form } from 'formik';
 import List from '../../Items/List';
 import ButtonItem from '../../Items/ButtonItem';
@@ -11,7 +11,7 @@ interface PrimaryDataListProps {
     deleteButtonLabel: string;
 
     value?: string;
-    itemList?: { id?: number; name: string }[];
+    itemList?: { id?: number; name: string; isUsing: boolean }[];
 
     onSelect: (name: string, value: string) => void;
     onDelete: (name: string, value?: string) => void;
@@ -20,6 +20,11 @@ interface PrimaryDataListProps {
 export default function PrimaryDataList(props: PrimaryDataListProps) {
     const { name, cssPrefix, title, deleteButtonLabel, value, itemList } = props;
     const { onSelect, onDelete } = props;
+
+    const disableDeleteBtn = useMemo(
+        () => itemList?.find((item) => item.id?.toString() === value)?.isUsing ?? true,
+        [itemList, value]
+    );
 
     const onDeleteCallback = useCallback(
         () => onDelete(name, value),
@@ -42,8 +47,12 @@ export default function PrimaryDataList(props: PrimaryDataListProps) {
                         valueList={(itemList ?? []).map(({ id }) => id!.toString())}
                         onSelect={onSelect}
                     >
-                        {itemList?.map(({ id, name }) => (
-                            <div key={id} className={className}>
+                        {itemList?.map(({ id, name, isUsing }) => (
+                            <div
+                                key={id}
+                                className={className}
+                                style={isUsing ? { color: 'gray' } : undefined}
+                            >
                                 <span>{name}</span>
                             </div>
                         ))}
@@ -52,6 +61,8 @@ export default function PrimaryDataList(props: PrimaryDataListProps) {
                 <ButtonItem
                     type='submit'
                     label={deleteButtonLabel}
+                    disabled={disableDeleteBtn}
+                    useDisabledClass={false}
                     className='delete-list-item-button delete-button'
                     onClick={onDeleteCallback}
                 />

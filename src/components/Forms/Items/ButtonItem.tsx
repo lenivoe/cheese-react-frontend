@@ -7,6 +7,7 @@ interface ButtonProps {
     className?: string;
     onClick?: (name?: string) => void;
     label: string;
+    useDisabledClass?: boolean
 }
 
 const ButtonItem = ({
@@ -16,6 +17,7 @@ const ButtonItem = ({
     onClick,
     label,
     type = 'button',
+    useDisabledClass = true,
 }: ButtonProps) => {
     const onClickCallback = useCallback(() => onClick?.(name), [onClick, name]);
     return (
@@ -24,7 +26,7 @@ const ButtonItem = ({
             disabled={disabled}
             onClick={onClickCallback}
             type={type}
-            className={`${className} ${disabled ? 'disabled-block' : ''}`}
+            className={`${className} ${useDisabledClass && disabled ? 'disabled-block' : ''}`}
         >
             {label}
         </button>
