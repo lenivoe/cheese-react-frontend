@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Form } from 'formik';
 import List from '../../Items/List';
 import ButtonItem from '../../Items/ButtonItem';
 
@@ -28,31 +29,33 @@ export default function PrimaryDataList(props: PrimaryDataListProps) {
     const className = `${cssPrefix}-list__property-item list-item`;
 
     return (
-        <div className='property-edit__property-parameters property-edit--list'>
-            <div className={`${cssPrefix}-list list`}>
-                <div className={`${cssPrefix}-list__title list-title`}>
-                    <span>{title}</span>
+        <Form>
+            <div className='property-edit__property-parameters property-edit--list'>
+                <div className={`${cssPrefix}-list list`}>
+                    <div className={`${cssPrefix}-list__title list-title`}>
+                        <span>{title}</span>
+                    </div>
+                    <List
+                        className={`${cssPrefix}-list__data list-data`}
+                        name={name}
+                        value={value}
+                        valueList={(itemList ?? []).map(({ id }) => id!.toString())}
+                        onSelect={onSelect}
+                    >
+                        {itemList?.map(({ id, name }) => (
+                            <div key={id} className={className}>
+                                <span>{name}</span>
+                            </div>
+                        ))}
+                    </List>
                 </div>
-                <List
-                    className={`${cssPrefix}-list__data list-data`}
-                    name={name}
-                    value={value}
-                    valueList={(itemList ?? []).map(({ id }) => id!.toString())}
-                    onSelect={onSelect}
-                >
-                    {itemList?.map(({ id, name }) => (
-                        <div key={id} className={className}>
-                            <span>{name}</span>
-                        </div>
-                    ))}
-                </List>
+                <ButtonItem
+                    type='submit'
+                    label={deleteButtonLabel}
+                    className='delete-list-item-button delete-button'
+                    onClick={onDeleteCallback}
+                />
             </div>
-            <ButtonItem
-                type='submit'
-                label={deleteButtonLabel}
-                className='delete-list-item-button delete-button'
-                onClick={onDeleteCallback}
-            />
-        </div>
+        </Form>
     );
 }

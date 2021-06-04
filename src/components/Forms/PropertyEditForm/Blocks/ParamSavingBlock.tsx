@@ -1,3 +1,6 @@
+import React from 'react';
+import { Form } from 'formik';
+
 interface ParamSavingBlockProps {
     id?: number;
     needEdit: boolean;
@@ -14,7 +17,7 @@ const ParamSavingBlock = ({ id, needEdit, visible = true }: ParamSavingBlockProp
     return (
         <div className={`form-block ${className}`}>
             <div className='form-block__title'>{title}</div>
-            <form action='' className='form form--flex'>
+            <Form className='form form--flex'>
                 <div className='form__fields'>
                     <div className='form-block__item form__field'>
                         <label
@@ -51,7 +54,7 @@ const ParamSavingBlock = ({ id, needEdit, visible = true }: ParamSavingBlockProp
                 <button className='form-button' type='submit'>
                     Сохранить
                 </button>
-            </form>
+            </Form>
         </div>
     );
 };

@@ -1,12 +1,14 @@
 import FacticalParameter from '../FacticalParameter';
-import Group from '../Group';
+import Property from './Property';
 
 // TODO like FormalProperty
-export default interface FacticalProperty {
-    propertyId?: number; // TODO: refactoring
-    propertyName: string; // TODO: refactoring
-    code?: string;
-    isNote: boolean;
-    ungroupedParameters?: FacticalParameter[]; // TODO: refactoring
-    groups?: Group<FacticalParameter>[];
-}
+// export default interface FacticalProperty {
+//     id?: number;
+//     name: string;
+//     code?: string;
+//     isNote: boolean;
+//     ungrouped?: FacticalParameter[];
+//     groups?: Group<FacticalParameter>[];
+// }
+
+export default interface FacticalProperty extends Property<FacticalParameter> {}

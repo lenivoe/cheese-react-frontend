@@ -1,3 +1,6 @@
+import React from 'react';
+import { Form } from 'formik';
+
 interface PropSavingBlockProps {
     id?: number;
     needEdit: boolean;
@@ -14,7 +17,7 @@ const PropertySavingBlock = ({ id, needEdit, visible = true }: PropSavingBlockPr
     return (
         <div className={`form-block ${className}`}>
             <div className='form-block__title'>{title}</div>
-            <form action='' className='form form--flex'>
+            <Form className='form form--flex'>
                 <div className='form__fields'>
                     <div className='form__field'>
                         <label className='form-label' htmlFor='property_name'>
@@ -31,7 +34,7 @@ const PropertySavingBlock = ({ id, needEdit, visible = true }: PropSavingBlockPr
                 <button className='form-button' type='submit'>
                     Сохранить
                 </button>
-            </form>
+            </Form>
         </div>
     );
 };

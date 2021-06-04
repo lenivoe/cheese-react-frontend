@@ -37,8 +37,8 @@ class Generator {
             return response.data;
         };
     }
-    static post<T>(url: string) {
-        return async (value: T, timeout: number = apiConfig.defaultTimeout) => {
+    static post<T, V = T>(url: string) {
+        return async (value: V, timeout: number = apiConfig.defaultTimeout) => {
             const response = await axiosInst.post<T>(url, value, getConfig(timeout));
             return response.data;
         };
@@ -74,9 +74,10 @@ const type = {
 
 const property = {
     getAll: Generator.get<FormalProperty[]>('/property'),
-    getAllWithParameters: Generator.get<FormalProperty[]>('/property/with_parameters'),
+    getAllWithParameters: Generator.get<FormalProperty[]>('/property/with-params'),
     get: Generator.getById<FormalProperty>((id) => `/property/${id}`),
     post: Generator.post<FormalProperty>('/property'),
+    postWithParams: Generator.post<FormalProperty>('/property/with-params'),
     delete: Generator.deleteById<FormalProperty>((id) => `/property/${id}`),
 };
 
@@ -89,6 +90,10 @@ const formalParameter = {
     get: Generator.getById<FormalParameter>((id) => `/formal-parameter/${id}`),
     post: Generator.post<FormalParameter>('/formal-parameter'),
     delete: Generator.deleteById<FormalParameter>((id) => `/formal-parameter/${id}`),
+    isUsing: Generator.getById<boolean>((id) => `/formal-parameter/in-use/${id}`),
+    isListUsing: Generator.post<{ [key: number]: boolean }, number[]>(
+        '/formal-parameter/in-use-batch'
+    ),
 };
 
 const API = {

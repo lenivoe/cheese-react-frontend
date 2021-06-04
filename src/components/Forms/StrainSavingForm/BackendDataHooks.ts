@@ -15,7 +15,8 @@ const download = async ({ strainId }: { strainId?: string } & AnyObj) => {
 
 export const useDownloadData = () => {
     const { strainId } = useParams<{ strainId?: string }>();
-    return useAsync(download, { strainId, watch: strainId });
+    const asyncState = useAsync(download, { strainId, watch: strainId });
+    return { isStrainExist: !!strainId, ...asyncState };
 };
 
 const upload = ([strain]: Strain[]) => API.strain.post(strain);

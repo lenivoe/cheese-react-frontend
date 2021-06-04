@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Formik, FormikProps } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useAsync } from 'react-async';
 import API from '../../../utils/API';
@@ -10,8 +10,41 @@ import PropertyEditBlock from './Blocks/PropertyEditBlock';
 import PropertySavingBlock from './Blocks/PropertySavingBlock';
 import ParamSavingBlock from './Blocks/ParamSavingBlock';
 import MakeGroupFrom from './Blocks/MakeGroupFrom';
+import FormalParameter from '../../../models/FormalParameter';
 
-const downloadPropListAsync = async () => API.property.getAllWithParameters();
+async function downloadPropListAsync() {
+    const allProperty = await API.property.getAllWithParameters();
+    const paramIdList = allProperty.flatMap((prop) => {
+        const paramList = [
+            ...(prop.ungrouped ?? []),
+            ...(prop.groups ?? []).flatMap((group) => group.parameters),
+        ];
+        return paramList.map((param) => param.id!);
+    });
+
+    const isUsingList = await API.formalParameter.isListUsing(paramIdList);
+
+    const addUsingInfo = (param: FormalParameter) => ({
+        ...param,
+        isUsing: isUsingList[param.id!],
+    });
+
+    const propList = allProperty.map((prop) => {
+        const ungrouped = prop.ungrouped?.map(addUsingInfo);
+        const groups = prop.groups?.map(({ parameters, ...rest }) => ({
+            ...rest,
+            parameters: parameters.map(addUsingInfo),
+        }));
+
+        const isUsing =
+            !!ungrouped?.find((param) => param.isUsing) ||
+            !!groups?.find((group) => !!group.parameters.find((param) => param.isUsing));
+
+        return { ...prop, ungrouped, groups, isUsing };
+    });
+
+    return propList;
+}
 const uploadPropAsync = async ([property]: FormalProperty[]) =>
     API.property.post(property);
 const removePropAsync = async ([id]: number[]) => API.property.delete(id);
@@ -67,23 +100,21 @@ const FormInner = (props: FormikProps<PropertyEditFormValues>) => {
     const isGroupEdit = state === 'EDIT_GROUPS';
 
     return (
-        <Form>
-            <div className='property-edit'>
-                <PropertyEditBlock {...props} />
-                <div className='property-edit__form-block'>
-                    <PropertySavingBlock
-                        id={undefined && 'property?.id'}
-                        needEdit={state === 'EDIT_PROP'}
-                        visible={isPropSave}
-                    />
-                    <ParamSavingBlock
-                        id={undefined && 'parameter?.id'}
-                        needEdit={state === 'EDIT_PARAM'}
-                        visible={isParamSave}
-                    />
-                </div>
-                <MakeGroupFrom visible={isGroupEdit} />
+        <div className='property-edit'>
+            <PropertyEditBlock {...props} />
+            <div className='property-edit__form-block'>
+                <PropertySavingBlock
+                    id={undefined && 'property?.id'}
+                    needEdit={state === 'EDIT_PROP'}
+                    visible={isPropSave}
+                />
+                <ParamSavingBlock
+                    id={undefined && 'parameter?.id'}
+                    needEdit={state === 'EDIT_PARAM'}
+                    visible={isParamSave}
+                />
             </div>
-        </Form>
+            <MakeGroupFrom visible={isGroupEdit} />
+        </div>
     );
 };

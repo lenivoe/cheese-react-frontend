@@ -14,20 +14,20 @@ export default function PropertiesList({ propType: type }: PropertiesListProps) 
     return (
         <FieldArray name={type}>
             {(propHelpers) =>
-                values.properties[type].map((prop, propInd) => {
-                    const ungroupedField = `properties.${type}[${propInd}].ungroupedParameters`;
-                    const groupesField = `properties.${type}[${propInd}].groups`;
+                values.properties[type].map((prop, propIdx) => {
+                    const ungroupedField = `properties.${type}[${propIdx}].ungrouped`;
+                    const groupesField = `properties.${type}[${propIdx}].groups`;
 
                     return (
-                        <PropertyItem key={prop.propertyId} title={prop.propertyName}>
-                            {prop.ungroupedParameters && (
+                        <PropertyItem key={prop.id} title={prop.name}>
+                            {prop.ungrouped && (
                                 <FieldArray name={ungroupedField}>
                                     {(ungroupedHelpers) =>
-                                        prop.ungroupedParameters?.map(
-                                            (param, paramInd) => (
+                                        prop.ungrouped?.map(
+                                            (param, paramIdx) => (
                                                 <ParamField
-                                                    key={param.id ?? -paramInd - 1}
-                                                    name={`${ungroupedField}[${paramInd}]`}
+                                                    key={param.id ?? -paramIdx - 1}
+                                                    name={`${ungroupedField}[${paramIdx}]`}
                                                     param={param}
                                                 />
                                             )
@@ -39,15 +39,15 @@ export default function PropertiesList({ propType: type }: PropertiesListProps) 
                             {prop.groups && (
                                 <FieldArray name={groupesField}>
                                     {(groupesHelpers) =>
-                                        prop.groups?.map((group, groupInd) => (
-                                            <div key={group.groupId ?? -groupInd - 1}>
+                                        prop.groups?.map((group, groupIdx) => (
+                                            <div key={group.groupId ?? -groupIdx - 1}>
                                                 {group.parameters.map(
-                                                    (param, paramInd) => (
+                                                    (param, paramIdx) => (
                                                         <ParamField
                                                             key={
-                                                                param.id ?? -paramInd - 1
+                                                                param.id ?? -paramIdx - 1
                                                             }
-                                                            name={`${groupesField}[${groupInd}].parameters[${paramInd}]`}
+                                                            name={`${groupesField}[${groupIdx}].parameters[${paramIdx}]`}
                                                             param={param}
                                                         />
                                                     )
