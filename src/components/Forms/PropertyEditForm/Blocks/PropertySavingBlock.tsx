@@ -1,16 +1,25 @@
 import React from 'react';
-import { Form } from 'formik';
+import { Form, FormikProps } from 'formik';
+import PropertyEditFormValues from '../PropertyEditFormValues';
+import TextItem from '../../Items/TextItem';
 
-interface PropSavingBlockProps {
-    id?: number;
+type PropSavingBlockProps = FormikProps<PropertyEditFormValues> & {
     needEdit: boolean;
     visible?: boolean;
-}
+};
 
-const PropertySavingBlock = ({ id, needEdit, visible = true }: PropSavingBlockProps) => {
+const PropertySavingBlock = ({
+    needEdit,
+    visible = true,
+    ...props
+}: PropSavingBlockProps) => {
     if (!visible) {
         return null;
     }
+
+    const {
+        values: { propInfo },
+    } = props;
 
     const title = needEdit ? 'Изменить свойство' : 'Добавить свойство';
     const className = needEdit ? 'edit-property-form' : 'add-property-form';
@@ -19,7 +28,14 @@ const PropertySavingBlock = ({ id, needEdit, visible = true }: PropSavingBlockPr
             <div className='form-block__title'>{title}</div>
             <Form className='form form--flex'>
                 <div className='form__fields'>
-                    <div className='form__field'>
+                    <TextItem
+                        name='propInfo.saving.name'
+                        label='Наименование'
+                        className='form__field'
+                        labelClassName='form-label'
+                        inputClassName='form-input'
+                    />
+                    {/* <div className='form__field'>
                         <label className='form-label' htmlFor='property_name'>
                             Наименование
                         </label>
@@ -29,7 +45,7 @@ const PropertySavingBlock = ({ id, needEdit, visible = true }: PropSavingBlockPr
                             type='text'
                             name='property_name'
                         />
-                    </div>
+                    </div> */}
                 </div>
                 <button className='form-button' type='submit'>
                     Сохранить

@@ -104,7 +104,7 @@ const FormInner = (props: FormikProps<PropertyEditFormValues>) => {
             <PropertyEditBlock {...props} />
             <div className='property-edit__form-block'>
                 <PropertySavingBlock
-                    id={undefined && 'property?.id'}
+                    {...props}
                     needEdit={state === 'EDIT_PROP'}
                     visible={isPropSave}
                 />

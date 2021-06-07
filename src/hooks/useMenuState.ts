@@ -2,22 +2,34 @@ import { nanoid } from 'nanoid/non-secure';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+// const menuLabels = [
+//     'Каталог микроорганизмов',
+//     'Добавить штамм микроорганизма',
+//     'Поиск и редактирование штаммов микроорганизмов',
+//     'Редактирование свойств и параметров микроорганзимов',
+//     '[Тест] редактирование штамма 1',
+//     '[Тест] редактирование штамма 2',
+// ];
+
+// const menuUrlList = [
+//     '/catalog',
+//     '/strain/add',
+//     '/strain/search',
+//     '/properties',
+//     '/strain/1/edit',
+//     '/strain/2/edit',
+// ];
+
 const menuLabels = [
     'Каталог микроорганизмов',
     'Добавить штамм микроорганизма',
-    'Поиск и редактирование штаммов микроорганизмов',
     'Редактирование свойств и параметров микроорганзимов',
-    '[Тест] редактирование штамма 1',
-    '[Тест] редактирование штамма 2',
 ];
 
 const menuUrlList = [
     '/catalog',
     '/strain/add',
-    '/strain/search',
     '/properties',
-    '/strain/1/edit',
-    '/strain/2/edit',
 ];
 
 const items = menuUrlList.map(
