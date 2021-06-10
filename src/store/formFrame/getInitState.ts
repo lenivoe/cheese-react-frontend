@@ -20,16 +20,16 @@ export function getInitState(): FormFrameState {
         'Каталог микроорганизмов',
         'Добавить штамм микроорганизма',
         'Редактирование свойств и параметров микроорганзимов',
-        '[Тест] редактирование штамма 1',
-        '[Тест] редактирование штамма 2',
+        // '[Тест] редактирование штамма 1',
+        // '[Тест] редактирование штамма 2',
     ];
 
     const menuUrlList = [
         '/catalog',
         '/strain/add',
         '/properties',
-        '/strain/1/edit',
-        '/strain/2/edit',
+        // '/strain/1/edit',
+        // '/strain/2/edit',
     ];
 
     const items = menuUrlList.map(

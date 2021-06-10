@@ -1,5 +1,5 @@
-import React from 'react';
-import { Form, Formik } from 'formik';
+import React, { useState } from 'react';
+import { Field, Form, Formik } from 'formik';
 import moment from 'moment';
 import { DATE_FORMAT } from '../../../models/ParamDataType';
 import { DateField, SelectField, TextField } from './Fields';
@@ -8,24 +8,41 @@ import StrainSavingFormValues from './StrainSavingFormValues';
 import { useDownloadData, useUploadStrain } from './BackendDataHooks';
 import validationSchema from './validationSchema';
 import FormErrorMessage from '../Items/FormErrorMessage';
-import { setActiveMenuItemByKey, MenuKey, setTitleByActiveItem } from '../../../store/formFrame/formFrameSlice';
+import {
+    setActiveMenuItemByKey,
+    MenuKey,
+    setTitleByActiveItem,
+} from '../../../store/formFrame/formFrameSlice';
 import { useAppDispatch } from '../../../store/hooks';
+import { useHistory } from 'react-router-dom';
+import FacticalProperty from '../../../models/Property/FacticalProperty';
 
 export default function StrainSavingForm() {
+    const [extraProps, setExtraProps] = useState([] as FacticalProperty[]);
+
+    const history = useHistory();
+
     const download = useDownloadData();
     const upload = useUploadStrain();
-    
-    let menuKey: MenuKey
-    switch(download.strainId) {
-        case '1': menuKey = MenuKey.TEST1; break;
-        case '2': menuKey = MenuKey.TEST2; break;
-        default: menuKey = MenuKey.STRAIN_SAVE; break;
+
+    let menuKey: MenuKey;
+    switch (download.strainId) {
+        case '1':
+            menuKey = MenuKey.TEST1;
+            break;
+        case '2':
+            menuKey = MenuKey.TEST2;
+            break;
+        default:
+            menuKey = MenuKey.STRAIN_SAVE;
+            break;
     }
     const dispatch = useAppDispatch();
     dispatch(setActiveMenuItemByKey(menuKey));
     dispatch(setTitleByActiveItem());
 
-    const [genusList, typeList, strain] = download.data ?? [[], [], undefined];
+    const defaultData = [[], [], [], undefined] as NonNullable<typeof download.data>;
+    const [propList, genusList, typeList, strain] = download.data ?? defaultData;
 
     if (strain) {
         strain.properties.sort((p1, p2) => p1.id! - p2.id!);
@@ -48,6 +65,11 @@ export default function StrainSavingForm() {
                 bio: properties.filter((prop) => !prop.isNote) ?? [],
                 note: properties.filter((prop) => prop.isNote) ?? [],
             },
+            property: {
+                selected: {
+                    id: propList.length > 0 ? propList[0].id.toString() : undefined,
+                },
+            },
         };
     } else {
         const today = moment().format(DATE_FORMAT);
@@ -59,8 +81,15 @@ export default function StrainSavingForm() {
             obtainingMethod: '',
             dateAdded: today,
             properties: { bio: [], note: [] },
+            property: {
+                selected: {
+                    id: propList.length > 0 ? propList[0].id.toString() : undefined,
+                },
+            },
         };
     }
+
+    initValues.properties.bio = [...initValues.properties.bio, ...extraProps];
 
     return (
         <div className='strain-adding'>
@@ -68,7 +97,7 @@ export default function StrainSavingForm() {
             <Formik<StrainSavingFormValues>
                 enableReinitialize={true}
                 initialValues={initValues}
-                validationSchema={validationSchema}
+                // validationSchema={validationSchema}
                 onSubmit={({ genus: _, type, properties, ...rest }) => {
                     const strainData = {
                         type: type!,
@@ -172,7 +201,7 @@ export default function StrainSavingForm() {
                                 <PropertiesList propType='bio' />
                                 <PropertiesList propType='note' />
 
-                                {/* без логиги */}
+                                {/* добавление свойств */}
                                 <div className='add-property-block'>
                                     <label
                                         className='add-property-block__label'
@@ -180,17 +209,55 @@ export default function StrainSavingForm() {
                                     >
                                         Все свойства
                                     </label>
-                                    <select
+                                    <Field
+                                        as='select'
                                         className='add-property-block__select'
-                                        name='property-data'
+                                        name='property.selected.id'
                                         id='add-property-block__select'
                                     >
-                                        <option value='1'>свойство 1</option>
-                                        <option value='2'>свойство 2</option>
-                                        <option value='3'>свойство 3</option>
-                                        <option value='4'>свойство 4</option>
-                                    </select>
-                                    <button className='add-property-block__button add-button'>
+                                        {propList.map(({ id, name }) => {
+                                            return (
+                                                <option key={id} value={id}>
+                                                    {name}
+                                                </option>
+                                            );
+                                        })}
+                                    </Field>
+                                    <button
+                                        type='button'
+                                        className='add-property-block__button add-button'
+                                        onClick={() => {
+                                            const idStr = values.property.selected.id;
+                                            if (idStr) {
+                                                const id = parseInt(idStr);
+                                                const prop = propList.find(
+                                                    (prop) => prop.id === id
+                                                )!;
+                                                const paramList = [
+                                                    ...(prop.ungrouped ?? []),
+                                                    ...(prop.groups ?? []).flatMap(
+                                                        (group) => group.parameters
+                                                    ),
+                                                ];
+                                                const ungrouped = paramList.map(
+                                                    (param) => ({
+                                                        value: '',
+                                                        formalParameter: param,
+                                                    })
+                                                );
+                                                const facticalProp: FacticalProperty = {
+                                                    ...prop,
+                                                    ungrouped,
+                                                    groups: undefined,
+                                                };
+                                                setExtraProps([
+                                                    ...extraProps,
+                                                    facticalProp,
+                                                ]);
+                                                // values.properties.bio.push(facticalProp);
+                                            }
+                                        }}
+                                    >
                                         добавить
                                     </button>
                                 </div>
@@ -206,6 +273,7 @@ export default function StrainSavingForm() {
                                     <button
                                         type='button'
                                         className='form-buttons__cancel-button form-button cancel-button delete-button'
+                                        onClick={() => history.goBack()}
                                     >
                                         Отмена
                                     </button>

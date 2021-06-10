@@ -6,6 +6,7 @@ type StrainSavingFormValues = Omit<Strain, 'properties' | 'type'> & {
     genus?: Genus;
     type?: Strain['type'];
     properties: { bio: FacticalProperty[]; note: FacticalProperty[] };
+    property: {selected:{id?: string}}
 };
 
 export default StrainSavingFormValues;

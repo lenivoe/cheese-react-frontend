@@ -7,6 +7,7 @@ import { AnyObj } from '../../../utils/utils';
 const download = async ({ strainId }: { strainId?: string } & AnyObj) => {
     const id = strainId ? Number.parseInt(strainId, 10) : undefined;
     return Promise.all([
+        API.property.getAll(),
         API.genus.getAll(),
         API.type.getAll(),
         id ? API.strain.get(id) : undefined,

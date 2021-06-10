@@ -74,7 +74,7 @@ export default function PropertyEditForm() {
                     propInfo: { removing: {}, selected: {} },
                     paramInfo: { removing: {}, selected: {} },
                     propList: download.data,
-                    state: 'EDIT_GROUPS',
+                    state: 'NONE',
                 }}
                 validationSchema={() =>
                     Yup.object({
