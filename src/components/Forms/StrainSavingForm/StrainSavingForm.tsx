@@ -8,10 +8,22 @@ import StrainSavingFormValues from './StrainSavingFormValues';
 import { useDownloadData, useUploadStrain } from './BackendDataHooks';
 import validationSchema from './validationSchema';
 import FormErrorMessage from '../Items/FormErrorMessage';
+import { setActiveMenuItemByKey, MenuKey, setTitleByActiveItem } from '../../../store/formFrame/formFrameSlice';
+import { useAppDispatch } from '../../../store/hooks';
 
 export default function StrainSavingForm() {
     const download = useDownloadData();
     const upload = useUploadStrain();
+    
+    let menuKey: MenuKey
+    switch(download.strainId) {
+        case '1': menuKey = MenuKey.TEST1; break;
+        case '2': menuKey = MenuKey.TEST2; break;
+        default: menuKey = MenuKey.STRAIN_SAVE; break;
+    }
+    const dispatch = useAppDispatch();
+    dispatch(setActiveMenuItemByKey(menuKey));
+    dispatch(setTitleByActiveItem());
 
     const [genusList, typeList, strain] = download.data ?? [[], [], undefined];
 

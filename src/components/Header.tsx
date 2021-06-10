@@ -1,27 +1,27 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { selectFormFrame, toggleMenuVisibility } from '../store/formFrame/formFrameSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 
-export interface HeaderProps {
-    onMenuButtonClick: () => void;
-    isMenuButtonActive: boolean;
-    title: string;
-}
+export default function Header() {
+    const dispatch = useAppDispatch();
+    const {
+        title,
+        menu: { isVisible },
+    } = useAppSelector(selectFormFrame);
 
-export default function Header({
-    onMenuButtonClick,
-    isMenuButtonActive,
-    title,
-}: HeaderProps) {
-    const active = isMenuButtonActive ? ' active' : '';
+    const toggleVisible = useCallback(() => dispatch(toggleMenuVisibility()), [dispatch]);
+
+    const active = isVisible ? ' active' : '';
 
     return (
         <header className='header container'>
             <div className='header__content header-content'>
-                <div
+                <button
                     className={'header__menu-button menu-button' + active}
-                    onClick={onMenuButtonClick}
+                    onClick={toggleVisible}
                 >
                     Меню
-                </div>
+                </button>
                 <div className='header__title'>{title}</div>
             </div>
         </header>

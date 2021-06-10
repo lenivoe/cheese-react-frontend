@@ -29,11 +29,11 @@ export default function PropertyEditBlock(props: FormikProps<PropertyEditFormVal
             />
 
             <div className='property-edit__form-menu form-menu'>
-                <ButtonItem
+                {/* <ButtonItem
                     label='Группы параметров'
                     className={btnClassName('edit-groups', state === 'EDIT_GROUPS')}
                     onClick={() => setFieldValue('state', 'EDIT_GROUPS')}
-                />
+                /> */}
 
                 <div className='form-menu__add-buttons form-menu__buttons-block'>
                     <ButtonItem

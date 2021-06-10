@@ -11,6 +11,12 @@ import PropertySavingBlock from './Blocks/PropertySavingBlock';
 import ParamSavingBlock from './Blocks/ParamSavingBlock';
 import MakeGroupFrom from './Blocks/MakeGroupFrom';
 import FormalParameter from '../../../models/FormalParameter';
+import {
+    MenuKey,
+    setActiveMenuItemByKey,
+    setTitleByActiveItem,
+} from '../../../store/formFrame/formFrameSlice';
+import { useAppDispatch } from '../../../store/hooks';
 
 async function downloadPropListAsync() {
     const allProperty = await API.property.getAllWithParameters();
@@ -53,6 +59,10 @@ export default function PropertyEditForm() {
     const download = useAsync(downloadPropListAsync);
     const uploadProp = useAsync({ deferFn: uploadPropAsync });
     const removeProp = useAsync({ deferFn: removePropAsync });
+
+    const dispatch = useAppDispatch();
+    dispatch(setActiveMenuItemByKey(MenuKey.PROPERTY_EDIT));
+    dispatch(setTitleByActiveItem());
 
     return (
         <div>

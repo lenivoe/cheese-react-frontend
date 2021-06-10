@@ -1,22 +1,32 @@
-import React, {useCallback} from 'react';
-import {Link, Route, Switch, useParams, useRouteMatch} from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link, Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import API from '../../utils/API';
-import {useAsync} from 'react-async';
-import {join} from 'path';
+import { useAsync } from 'react-async';
+import { join } from 'path';
+import { useAppDispatch } from '../../store/hooks';
+import {
+    MenuKey,
+    setActiveMenuItemByKey,
+    setTitleByActiveItem,
+} from '../../store/formFrame/formFrameSlice';
 
 export default function MicroorganismsCatalog() {
-    const {path} = useRouteMatch();
+    const { path } = useRouteMatch();
+
+    const dispatch = useAppDispatch();
+    dispatch(setActiveMenuItemByKey(MenuKey.CATALOG));
+    dispatch(setTitleByActiveItem());
 
     return (
         <Switch>
             <Route exact path={path}>
-                <GenusList/>
+                <GenusList />
             </Route>
             <Route exact path={join(path, ':genusId')}>
-                <TypeList/>
+                <TypeList />
             </Route>
             <Route exact path={join(path, ':genusId/:typeId')}>
-                <StrainList/>
+                <StrainList />
             </Route>
         </Switch>
     );
@@ -28,9 +38,12 @@ interface UrlParams {
 }
 
 function GenusList() {
-    const {url} = useRouteMatch();
-    const fetchData = useCallback(() => API.genus.getAll(), [])
-    const {data, error, isPending} = useAsync(fetchData)
+    const { url } = useRouteMatch();
+    const fetchData = useCallback(() => API.genus.getAll(), []);
+    const { data, error, isPending } = useAsync(fetchData);
+
+    const allTypes = useCallback(() => API.type.getAll(), []);
+    const types = useAsync(allTypes);
 
     if (isPending) {
         return <p>Загрузка данных...</p>;
@@ -41,17 +54,28 @@ function GenusList() {
 
     const genusList = data!;
 
-    const {length: listNumber} = genusList;
+    // const { length: listNumber } = genusList;
     return (
-        <div className="genus-list-block">
-            <ul className="genus-list">
+        <div className='genus-list-block'>
+            <ul className='genus-list'>
                 {genusList.map((genus) => (
-                    <li className="genus-list__item genus-item" key={genus.id}>
-                        <Link className="genus-list__link genus-link" to={join(url, genus.id!.toString())}>
-                            <span
-                                className="genus-link__name genus-name">{genus.name.length >= 50 ?
-                                genus.name.substr(1, 49) + "..." : genus.name}</span>
-                            <span className="genus-link__number genus-strains-number">{listNumber}</span>
+                    <li className='genus-list__item genus-item' key={genus.id}>
+                        <Link
+                            className='genus-list__link genus-link'
+                            to={join(url, genus.id!.toString())}
+                        >
+                            <span className='genus-link__name genus-name'>
+                                {genus.name.length >= 50
+                                    ? genus.name.substr(1, 49) + '...'
+                                    : genus.name}
+                            </span>
+                            <span className='genus-link__number genus-strains-number'>
+                                {
+                                    types.data?.filter(
+                                        (type) => type.genus.id === genus.id
+                                    ).length
+                                }
+                            </span>
                         </Link>
                     </li>
                 ))}
@@ -60,13 +84,12 @@ function GenusList() {
     );
 }
 
-
 function TypeList() {
-    const {url} = useRouteMatch();
+    const { url } = useRouteMatch();
     const genusId = Number(useParams<UrlParams>().genusId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchData = useCallback(() => API.genus.getTypes(genusId), [genusId])
-    const {data, error, isPending} = useAsync(fetchData)
+    const fetchData = useCallback(() => API.genus.getTypes(genusId), [genusId]);
+    const { data, error, isPending } = useAsync(fetchData);
 
     if (isPending) {
         return <p>Загрузка данных...</p>;
@@ -78,26 +101,27 @@ function TypeList() {
     const typeList = data!;
 
     return (
-        <div className="types-list-block">
-            <ul className="types-list big-list">
-                {typeList
-                    .map((type) => (
-                        <li className="types-list__item big-list__item" key={type.id}>
-                            <Link className="types-list__link types-link" to={join(url, type.id!.toString())}>
-                                {type.name}
-                            </Link>
-                        </li>
-                    ))}
+        <div className='types-list-block'>
+            <ul className='types-list big-list'>
+                {typeList.map((type) => (
+                    <li className='types-list__item big-list__item' key={type.id}>
+                        <Link
+                            className='types-list__link types-link'
+                            to={join(url, type.id!.toString())}
+                        >
+                            {type.name}
+                        </Link>
+                    </li>
+                ))}
             </ul>
         </div>
     );
 }
 
 function StrainList() {
-
     const typeId = Number(useParams<UrlParams>().typeId);
-    const fetchData = useCallback(() => API.type.getStrains(typeId), [typeId])
-    const {data, error, isPending} = useAsync(fetchData)
+    const fetchData = useCallback(() => API.type.getStrains(typeId), [typeId]);
+    const { data, error, isPending } = useAsync(fetchData);
 
     if (isPending) {
         return <p>Загрузка данных...</p>;
@@ -110,16 +134,17 @@ function StrainList() {
 
     return (
         <nav>
-            <ul className="strains-list big-list">
-                {strainList
-                    .map((strain) => (
-                        <li className="big-list__item strains-list__item" key={strain.id}>
-                            <Link className="strains-list__link strains-link"
-                                  to={join('/strain', strain.id!.toString(), 'edit')}>
-                                {strain.name}
-                            </Link>
-                        </li>
-                    ))}
+            <ul className='strains-list big-list'>
+                {strainList.map((strain) => (
+                    <li className='big-list__item strains-list__item' key={strain.id}>
+                        <Link
+                            className='strains-list__link strains-link'
+                            to={join('/strain', strain.id!.toString(), 'edit')}
+                        >
+                            {strain.name}
+                        </Link>
+                    </li>
+                ))}
             </ul>
         </nav>
     );
