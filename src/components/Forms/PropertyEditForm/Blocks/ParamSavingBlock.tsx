@@ -45,9 +45,11 @@ const ParamSavingBlock = ({ id, needEdit, visible = true }: ParamSavingBlockProp
                             name='parameter_type'
                             id='parameter_type'
                         >
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
+                            <option value='1'>число</option>
+                            <option value='2'>строка</option>
+                            <option value='3'>дата</option>
+                            <option value='3'>время</option>
+                            <option value='3'>список значений</option>
                         </select>
                     </div>
                 </div>

@@ -27,12 +27,12 @@ export default function StrainSavingForm() {
 
     let menuKey: MenuKey;
     switch (download.strainId) {
-        case '1':
-            menuKey = MenuKey.TEST1;
-            break;
-        case '2':
-            menuKey = MenuKey.TEST2;
-            break;
+        // case '1':
+        //     menuKey = MenuKey.TEST1;
+        //     break;
+        // case '2':
+        //     menuKey = MenuKey.TEST2;
+        //     break;
         default:
             menuKey = MenuKey.STRAIN_SAVE;
             break;
@@ -186,7 +186,7 @@ export default function StrainSavingForm() {
                                     />
                                     {/* каталожный индекс */}
                                     <TextField
-                                        label='Индекс штаммов'
+                                        label='Каталожный номер СКМ'
                                         name='collectionIndex'
                                     />
                                     {/* происхождение */}

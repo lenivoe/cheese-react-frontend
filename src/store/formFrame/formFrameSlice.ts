@@ -23,6 +23,8 @@ export const formFrameSlice = createSlice({
             state.menu.isVisible = !state.menu.isVisible;
         },
         setActiveMenuItemByKey: (state, action: PayloadAction<MenuKey>) => {
+            console.log(action.payload);
+            console.log(state.menu.items);
             state.menu.activeId = state.menu.items[action.payload].id;
         },
         setTitleByActiveItem: (state) => {
