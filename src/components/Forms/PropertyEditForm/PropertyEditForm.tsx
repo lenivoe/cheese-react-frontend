@@ -9,7 +9,6 @@ import FormErrorMessage from '../Items/FormErrorMessage';
 import PropertyEditBlock from './Blocks/PropertyEditBlock';
 import PropertySavingBlock from './Blocks/PropertySavingBlock';
 import ParamSavingBlock from './Blocks/ParamSavingBlock';
-import MakeGroupFrom from './Blocks/MakeGroupFrom';
 import FormalParameter from '../../../models/FormalParameter';
 import {
     MenuKey,
@@ -107,11 +106,11 @@ const FormInner = (props: FormikProps<PropertyEditFormValues>) => {
     const { state } = props.values;
     const isPropSave = state === 'ADD_PROP' || state === 'EDIT_PROP';
     const isParamSave = state === 'ADD_PARAM' || state === 'EDIT_PARAM';
-    const isGroupEdit = state === 'EDIT_GROUPS';
 
     return (
         <div className='property-edit'>
             <PropertyEditBlock {...props} />
+            
             <div className='property-edit__form-block'>
                 <PropertySavingBlock
                     {...props}
@@ -124,7 +123,6 @@ const FormInner = (props: FormikProps<PropertyEditFormValues>) => {
                     visible={isParamSave}
                 />
             </div>
-            <MakeGroupFrom visible={isGroupEdit} />
         </div>
     );
 };

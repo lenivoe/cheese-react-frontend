@@ -14,5 +14,5 @@ export default interface PropertyEditFormValues {
     propInfo: Info<Param>;
     paramInfo: Info<Param>;
     propList?: Prop[];
-    state: 'ADD_PROP' | 'EDIT_PROP' | 'ADD_PARAM' | 'EDIT_PARAM' | 'EDIT_GROUPS' | 'NONE';
+    state: 'ADD_PROP' | 'EDIT_PROP' | 'ADD_PARAM' | 'EDIT_PARAM' | 'NONE';
 }

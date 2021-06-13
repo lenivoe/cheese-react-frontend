@@ -25,20 +25,8 @@ export default function StrainSavingForm() {
     const download = useDownloadData();
     const upload = useUploadStrain();
 
-    let menuKey: MenuKey;
-    switch (download.strainId) {
-        // case '1':
-        //     menuKey = MenuKey.TEST1;
-        //     break;
-        // case '2':
-        //     menuKey = MenuKey.TEST2;
-        //     break;
-        default:
-            menuKey = MenuKey.STRAIN_SAVE;
-            break;
-    }
     const dispatch = useAppDispatch();
-    dispatch(setActiveMenuItemByKey(menuKey));
+    dispatch(setActiveMenuItemByKey(MenuKey.STRAIN_SAVE));
     dispatch(setTitleByActiveItem());
 
     const defaultData = [[], [], [], undefined] as NonNullable<typeof download.data>;

@@ -42,8 +42,14 @@ function GenusList() {
     const fetchData = useCallback(() => API.genus.getAll(), []);
     const { data, error, isPending } = useAsync(fetchData);
 
-    const allTypes = useCallback(() => API.type.getAll(), []);
-    const types = useAsync(allTypes);
+    const fetchAllTypes = useCallback(() => API.type.getAll(), []);
+    const types = useAsync(fetchAllTypes);
+    const countTypes = useCallback(
+        (genusId: number) => {
+            return types.data?.filter((type) => type.genus.id === genusId).length;
+        },
+        [types]
+    );
 
     if (isPending) {
         return <p>Загрузка данных...</p>;
@@ -53,6 +59,7 @@ function GenusList() {
     }
 
     const genusList = data!;
+    const maxLen = 50;
 
     // const { length: listNumber } = genusList;
     return (
@@ -65,16 +72,10 @@ function GenusList() {
                             to={join(url, genus.id!.toString())}
                         >
                             <span className='genus-link__name genus-name'>
-                                {genus.name.length >= 50
-                                    ? genus.name.substr(1, 49) + '...'
-                                    : genus.name}
+                                {trim(genus.name, maxLen)}
                             </span>
                             <span className='genus-link__number genus-strains-number'>
-                                {
-                                    types.data?.filter(
-                                        (type) => type.genus.id === genus.id
-                                    ).length
-                                }
+                                {`видов: ${countTypes(genus.id!)}`}
                             </span>
                         </Link>
                     </li>
@@ -148,4 +149,8 @@ function StrainList() {
             </ul>
         </nav>
     );
+}
+
+function trim(str: string, maxLen: number) {
+    return str.length >= maxLen ? str.substr(0, maxLen - 3) + '...' : str;
 }

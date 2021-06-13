@@ -23,19 +23,10 @@ export default function PropertyEditBlock(props: FormikProps<PropertyEditFormVal
                 paramListName='paramInfo.selected.id'
                 {...props}
             />
-            <ParameterList
-                name='paramInfo.selected.id'
-                {...props}
-            />
+            <ParameterList name='paramInfo.selected.id' {...props} />
 
             <div className='property-edit__form-menu form-menu'>
-                {/* <ButtonItem
-                    label='Группы параметров'
-                    className={btnClassName('edit-groups', state === 'EDIT_GROUPS')}
-                    onClick={() => setFieldValue('state', 'EDIT_GROUPS')}
-                /> */}
-
-                <div className='form-menu__add-buttons form-menu__buttons-block'>
+                <div className='form-menu__buttons-block'>
                     <ButtonItem
                         label='Добавить свойство'
                         className={btnClassName('add-property', state === 'ADD_PROP')}
@@ -43,17 +34,17 @@ export default function PropertyEditBlock(props: FormikProps<PropertyEditFormVal
                         // disabled={true}
                     />
                     <ButtonItem
-                        label='Добавить параметр'
-                        className={btnClassName('add-parameter', state === 'ADD_PARAM')}
-                        onClick={() => setFieldValue('state', 'ADD_PARAM')}
-                    />
-                </div>
-
-                <div className='form-menu__edit-buttons form-menu__buttons-block'>
-                    <ButtonItem
                         label='Изменить свойство'
                         className={btnClassName('edit-property', state === 'EDIT_PROP')}
                         onClick={() => setFieldValue('state', 'EDIT_PROP')}
+                    />
+                </div>
+
+                <div className='form-menu__buttons-block'>
+                    <ButtonItem
+                        label='Добавить параметр'
+                        className={btnClassName('add-parameter', state === 'ADD_PARAM')}
+                        onClick={() => setFieldValue('state', 'ADD_PARAM')}
                     />
                     <ButtonItem
                         label='Изменить параметр'
