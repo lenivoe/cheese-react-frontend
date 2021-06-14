@@ -9,13 +9,16 @@ import {
     setActiveMenuItemByKey,
     setTitleByActiveItem,
 } from '../../store/formFrame/formFrameSlice';
+import { useEffect } from 'react';
 
 export default function MicroorganismsCatalog() {
     const { path } = useRouteMatch();
 
     const dispatch = useAppDispatch();
-    dispatch(setActiveMenuItemByKey(MenuKey.CATALOG));
-    dispatch(setTitleByActiveItem());
+    useEffect(() => {
+        dispatch(setActiveMenuItemByKey(MenuKey.CATALOG));
+        dispatch(setTitleByActiveItem());
+    });
 
     return (
         <Switch>

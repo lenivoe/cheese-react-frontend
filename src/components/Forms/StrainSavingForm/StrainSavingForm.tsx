@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Field, Form, Formik } from 'formik';
 import moment from 'moment';
 import { DATE_FORMAT } from '../../../models/ParamDataType';
@@ -26,11 +26,16 @@ export default function StrainSavingForm() {
     const upload = useUploadStrain();
 
     const dispatch = useAppDispatch();
-    dispatch(setActiveMenuItemByKey(MenuKey.STRAIN_SAVE));
-    dispatch(setTitleByActiveItem());
+    useEffect(() => {
+        dispatch(setActiveMenuItemByKey(MenuKey.STRAIN_SAVE));
+        dispatch(setTitleByActiveItem());
+    });
 
-    const defaultData = [[], [], [], undefined] as NonNullable<typeof download.data>;
-    const [propList, genusList, typeList, strain] = download.data ?? defaultData;
+    const defaultData = [[], [], [], undefined] as NonNullable<
+        typeof download.data
+    >;
+    const [propList, genusList, typeList, strain] =
+        download.data ?? defaultData;
 
     if (strain) {
         strain.properties.sort((p1, p2) => p1.id! - p2.id!);
@@ -55,7 +60,10 @@ export default function StrainSavingForm() {
             },
             property: {
                 selected: {
-                    id: propList.length > 0 ? propList[0].id.toString() : undefined,
+                    id:
+                        propList.length > 0
+                            ? propList[0].id.toString()
+                            : undefined,
                 },
             },
         };
@@ -71,7 +79,10 @@ export default function StrainSavingForm() {
             properties: { bio: [], note: [] },
             property: {
                 selected: {
-                    id: propList.length > 0 ? propList[0].id.toString() : undefined,
+                    id:
+                        propList.length > 0
+                            ? propList[0].id.toString()
+                            : undefined,
                 },
             },
         };
@@ -81,11 +92,14 @@ export default function StrainSavingForm() {
 
     return (
         <div className='strain-adding'>
-            <FormErrorMessage download={download} upload={upload} />
+            <FormErrorMessage
+                loading={download.isPending || upload.isPending}
+                error={download.error ?? upload.error}
+            />
             <Formik<StrainSavingFormValues>
                 enableReinitialize={true}
                 initialValues={initValues}
-                // validationSchema={validationSchema}
+                validationSchema={validationSchema}
                 onSubmit={({ genus: _, type, properties, ...rest }) => {
                     const strainData = {
                         type: type!,
@@ -100,7 +114,10 @@ export default function StrainSavingForm() {
                     // Тогда, если выбран Род без id, то надо вывести Вид без id
                     const curTypeList = typeList.filter(({ genus }) => {
                         const curGenusId = values.genus?.id;
-                        return (!genus.id && !curGenusId) || genus.id === curGenusId;
+                        return (
+                            (!genus.id && !curGenusId) ||
+                            genus.id === curGenusId
+                        );
                     });
 
                     const disabled = !download.isFulfilled || upload.isPending;
@@ -115,14 +132,21 @@ export default function StrainSavingForm() {
                                             label='Род'
                                             onValueChange={(_name, value) => {
                                                 const genus = genusList.find(
-                                                    (genus) => genus.name === value
+                                                    (genus) =>
+                                                        genus.name === value
                                                 );
                                                 setFieldValue('genus', genus);
-                                                setFieldValue('type', undefined);
+                                                setFieldValue(
+                                                    'type',
+                                                    undefined
+                                                );
                                             }}
                                         >
                                             {genusList.map((genus) => (
-                                                <option key={genus.id} value={genus.name}>
+                                                <option
+                                                    key={genus.id}
+                                                    value={genus.name}
+                                                >
                                                     {genus.name}
                                                 </option>
                                             ))}
@@ -143,13 +167,17 @@ export default function StrainSavingForm() {
                                             label='Вид'
                                             onValueChange={(_name, value) => {
                                                 const type = curTypeList.find(
-                                                    (type) => type.name === value
+                                                    (type) =>
+                                                        type.name === value
                                                 );
                                                 setFieldValue('type', type);
                                             }}
                                         >
                                             {curTypeList.map((type) => (
-                                                <option key={type.id} value={type.name}>
+                                                <option
+                                                    key={type.id}
+                                                    value={type.name}
+                                                >
                                                     {type.name}
                                                 </option>
                                             ))}
@@ -165,7 +193,10 @@ export default function StrainSavingForm() {
                                     </div>
 
                                     {/* часть наименования */}
-                                    <TextField label='Исходный индекс' name='name' />
+                                    <TextField
+                                        label='Исходный индекс'
+                                        name='name'
+                                    />
                                     {/* часть наименования */}
                                     <DateField
                                         label='Дата получения'
@@ -178,7 +209,10 @@ export default function StrainSavingForm() {
                                         name='collectionIndex'
                                     />
                                     {/* происхождение */}
-                                    <TextField label='Происхождение' name='source' />
+                                    <TextField
+                                        label='Происхождение'
+                                        name='source'
+                                    />
                                     {/* способ получения */}
                                     <TextField
                                         label='Способ получения'
@@ -215,7 +249,8 @@ export default function StrainSavingForm() {
                                         type='button'
                                         className='add-property-block__button add-button'
                                         onClick={() => {
-                                            const idStr = values.property.selected.id;
+                                            const idStr =
+                                                values.property.selected.id;
                                             if (idStr) {
                                                 const id = parseInt(idStr);
                                                 const prop = propList.find(
@@ -223,8 +258,11 @@ export default function StrainSavingForm() {
                                                 )!;
                                                 const paramList = [
                                                     ...(prop.ungrouped ?? []),
-                                                    ...(prop.groups ?? []).flatMap(
-                                                        (group) => group.parameters
+                                                    ...(
+                                                        prop.groups ?? []
+                                                    ).flatMap(
+                                                        (group) =>
+                                                            group.parameters
                                                     ),
                                                 ];
                                                 const ungrouped = paramList.map(
@@ -233,11 +271,12 @@ export default function StrainSavingForm() {
                                                         formalParameter: param,
                                                     })
                                                 );
-                                                const facticalProp: FacticalProperty = {
-                                                    ...prop,
-                                                    ungrouped,
-                                                    groups: undefined,
-                                                };
+                                                const facticalProp: FacticalProperty =
+                                                    {
+                                                        ...prop,
+                                                        ungrouped,
+                                                        groups: undefined,
+                                                    };
                                                 setExtraProps([
                                                     ...extraProps,
                                                     facticalProp,

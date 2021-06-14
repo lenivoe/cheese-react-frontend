@@ -1,55 +1,66 @@
 import React from 'react';
-import { FormikProps } from 'formik';
 import ButtonItem from '../../Items/ButtonItem';
-import PropertyEditFormValues from '../PropertyEditFormValues';
-import PropertyList from './PropertyList';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+import { selectPropertyState } from '../../../../store/property/propertySlice';
+import {
+    selectMode,
+    setMode,
+} from '../../../../store/propertyEditForm/propertyEditFormSlice';
 import ParameterList from './ParameterList';
+import PropertyList from './PropertyList';
 
 const btnClassName = (part: string, isActive: boolean) => {
     const active = isActive ? 'active' : '';
     return `form-menu__${part}-button form-menu__button ${active}`;
 };
 
-export default function PropertyEditBlock(props: FormikProps<PropertyEditFormValues>) {
-    const {
-        values: { state },
-        setFieldValue,
-    } = props;
+export default function PropertyEditBlock() {
+    const dispatch = useAppDispatch();
+    const { propList, status, error } = useAppSelector(selectPropertyState);
+    const disabled = status !== 'success';
+    const mode = useAppSelector(selectMode);
 
     return (
         <div className='property-edit__info-block info-block'>
-            <PropertyList
-                name='propInfo.selected.id'
-                paramListName='paramInfo.selected.id'
-                {...props}
-            />
-            <ParameterList name='paramInfo.selected.id' {...props} />
+            <PropertyList />
+            {/* <ParameterList name='paramInfo.selected.id' /> */}
 
             <div className='property-edit__form-menu form-menu'>
                 <div className='form-menu__buttons-block'>
                     <ButtonItem
                         label='Добавить свойство'
-                        className={btnClassName('add-property', state === 'ADD_PROP')}
-                        onClick={() => setFieldValue('state', 'ADD_PROP')}
-                        // disabled={true}
+                        className={btnClassName(
+                            'add-property',
+                            mode === 'ADD_PROP'
+                        )}
+                        onClick={() => dispatch(setMode('ADD_PROP'))}
                     />
                     <ButtonItem
                         label='Изменить свойство'
-                        className={btnClassName('edit-property', state === 'EDIT_PROP')}
-                        onClick={() => setFieldValue('state', 'EDIT_PROP')}
+                        className={btnClassName(
+                            'edit-property',
+                            mode === 'EDIT_PROP'
+                        )}
+                        onClick={() => dispatch(setMode('EDIT_PROP'))}
                     />
                 </div>
 
                 <div className='form-menu__buttons-block'>
                     <ButtonItem
                         label='Добавить параметр'
-                        className={btnClassName('add-parameter', state === 'ADD_PARAM')}
-                        onClick={() => setFieldValue('state', 'ADD_PARAM')}
+                        className={btnClassName(
+                            'add-parameter',
+                            mode === 'ADD_PARAM'
+                        )}
+                        onClick={() => dispatch(setMode('ADD_PARAM'))}
                     />
                     <ButtonItem
                         label='Изменить параметр'
-                        className={btnClassName('edit-parameter', state === 'EDIT_PARAM')}
-                        onClick={() => setFieldValue('state', 'EDIT_PARAM')}
+                        className={btnClassName(
+                            'edit-parameter',
+                            mode === 'EDIT_PARAM'
+                        )}
+                        onClick={() => dispatch(setMode('EDIT_PARAM'))}
                     />
                 </div>
             </div>

@@ -23,12 +23,12 @@ export default function ParameterList(props: ParameterListProps) {
     }, [propList, propInfo.selected.id]);
 
     const onSelect = useCallback(
-        (name: string, value: string) => setFieldValue(name, parseInt(value)),
+        (name: string | undefined, value: string) => setFieldValue(name!, parseInt(value)),
         [setFieldValue]
     );
 
     const onDelete = useCallback(
-        (name: string, value?: string) => {
+        (name?: string, value?: string) => {
             console.log('param del', value)
             setFieldValue('paramInfo.removing.id', value && parseInt(value));
         },

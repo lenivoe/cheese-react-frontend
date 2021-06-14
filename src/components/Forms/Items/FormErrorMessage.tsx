@@ -1,26 +1,21 @@
+import { SerializedError } from '@reduxjs/toolkit';
+
 interface FormErrorMessageProps {
-    download: { isPending: boolean; error?: Error };
-    upload: { isPending: boolean; error?: Error };
+    loading: boolean;
+    error?: Error | SerializedError;
 }
 
-const FormErrorMessage = ({ download, upload }: FormErrorMessageProps) => (
-    <>
-        {download.isPending && <div className='loading'>Загрузка данных...</div>}
-        
-        {upload.isPending && <div className='loading'>Сохранение данных...</div>}
-
-        {download.error && (
-            <div className='field-error'>
-                Ошибка при получении данных: {download.error.message}
-            </div>
-        )}
-
-        {upload.error && (
-            <div className='field-error'>
-                Ошибка при отправке данных: {upload.error.message}
-            </div>
-        )}
-    </>
-);
+const FormErrorMessage = ({ loading, error }: FormErrorMessageProps) => {
+    return (
+        <>
+            {loading && <div className='loading'>Загрузка данных...</div>}
+            {error && (
+                <div className='field-error'>
+                    Ошибка при загрузке данных: {error?.message}
+                </div>
+            )}
+        </>
+    );
+};
 
 export default FormErrorMessage;

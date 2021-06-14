@@ -1,5 +1,4 @@
-import FormalParameter from '../../../models/FormalParameter';
-import Property from '../../../models/Property/Property';
+import { UsingParam, UsingProperty } from '../../../store/property/propertySlice';
 
 interface Info<T extends { id?: any }> {
     saving?: Omit<T, 'id'>;
@@ -7,12 +6,9 @@ interface Info<T extends { id?: any }> {
     selected: { id?: T['id'] };
 }
 
-type Param = FormalParameter & { isUsing: boolean };
-type Prop = Property<Param> & { isUsing: boolean };
-
 export default interface PropertyEditFormValues {
-    propInfo: Info<Param>;
-    paramInfo: Info<Param>;
-    propList?: Prop[];
+    propInfo: Info<UsingParam>;
+    paramInfo: Info<UsingParam>;
+    propList?: UsingProperty[];
     state: 'ADD_PROP' | 'EDIT_PROP' | 'ADD_PARAM' | 'EDIT_PARAM' | 'NONE';
 }

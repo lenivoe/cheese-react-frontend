@@ -1,35 +1,16 @@
-import { MenuKey } from "./formFrameSlice";
-
-interface MenuItem {
-    id: MenuKey;
-    url: string;
-    label: string;
-}
-
-interface FormFrameState {
-    title: string;
-    menu: {
-        isVisible: boolean;
-        activeId: MenuItem['id'];
-        items: MenuItem[];
-    };
-}
+import { FormFrameState, MenuKey } from "./formFrameSlice";
 
 export function getInitState(): FormFrameState {
     const menuLabels = [
         'Каталог микроорганизмов',
         'Добавить штамм микроорганизма',
         'Редактирование свойств и параметров микроорганзимов',
-        // '[Тест] редактирование штамма 1',
-        // '[Тест] редактирование штамма 2',
     ];
 
     const menuUrlList = [
         '/catalog',
         '/strain/add',
         '/properties',
-        // '/strain/1/edit',
-        // '/strain/2/edit',
     ];
 
     const items = menuUrlList.map(

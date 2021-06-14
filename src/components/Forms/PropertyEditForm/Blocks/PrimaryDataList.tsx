@@ -1,20 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
-import { Form } from 'formik';
 import List from '../../Items/List';
 import ButtonItem from '../../Items/ButtonItem';
 
 interface PrimaryDataListProps {
-    name: string;
+    name?: string;
     cssPrefix: string;
 
     title: string;
     deleteButtonLabel: string;
 
     value?: string;
-    itemList?: { id?: number; name: string; isUsing: boolean }[];
+    itemList?: { id?: number; name: string; isUsing?: boolean }[];
 
-    onSelect: (name: string, value: string) => void;
-    onDelete: (name: string, value?: string) => void;
+    onSelect: (name: string | undefined, value: string) => void;
+    onDelete: (name?: string, value?: string) => void;
 }
 
 export default function PrimaryDataList(props: PrimaryDataListProps) {
@@ -34,7 +33,7 @@ export default function PrimaryDataList(props: PrimaryDataListProps) {
     const className = `${cssPrefix}-list__property-item list-item`;
 
     return (
-        <Form>
+        <form>
             <div className='property-edit__property-parameters property-edit--list'>
                 <div className={`${cssPrefix}-list list`}>
                     <div className={`${cssPrefix}-list__title list-title`}>
@@ -67,6 +66,6 @@ export default function PrimaryDataList(props: PrimaryDataListProps) {
                     onClick={onDeleteCallback}
                 />
             </div>
-        </Form>
+        </form>
     );
 }

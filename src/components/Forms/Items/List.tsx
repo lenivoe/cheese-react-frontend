@@ -1,14 +1,13 @@
 import React, { useCallback } from 'react';
-import { useFormikContext } from 'formik';
 import assert from 'assert';
 
 export interface ListProps {
-    name: string;
+    name?: string;
     value?: string;
     valueList: string[];
     children: React.ReactNode;
     className?: string;
-    onSelect?: (name: string, value: string) => void;
+    onSelect?: (name: string | undefined, value: string) => void;
 }
 
 export default function List(props: ListProps) {
@@ -33,22 +32,21 @@ export default function List(props: ListProps) {
 }
 
 interface ListChildProps {
-    name: string;
+    name?: string;
     value: string;
     disabled?: boolean;
     selected?: boolean;
-    onClick?: (name: string, value: string) => void;
+    onClick?: (name: string | undefined, value: string) => void;
     children?: React.ReactNode;
 }
 
 function ListChild(props: ListChildProps) {
     const { name, value, selected, disabled, onClick, children } = props;
-    const { setFieldValue } = useFormikContext();
 
     const className = `list-item ${selected ? 'active' : ''}`;
     const action = useCallback(
-        () => disabled || (onClick ?? setFieldValue)(name, value),
-        [name, value, disabled, onClick, setFieldValue]
+        () => disabled || onClick?.(name, value),
+        [name, value, disabled, onClick]
     );
 
     return (

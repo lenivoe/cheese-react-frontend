@@ -12,8 +12,8 @@ import { useAppSelector } from '../store/hooks';
 import { selectFormFrame } from '../store/formFrame/formFrameSlice';
 
 function App() {
-    const isMenuVisible = useAppSelector(selectFormFrame);
-    const fromLeftClass = isMenuVisible ? ' data-from-left' : '';
+    const { menu } = useAppSelector(selectFormFrame);
+    const fromLeftClass = menu.isVisible ? ' data-from-left' : '';
 
     return (
         <>
@@ -25,10 +25,19 @@ function App() {
 
                     <div className={'main-content__data' + fromLeftClass}>
                         <Switch>
-                            <Route path='/catalog' component={MicroorganismsCatalog} />
-                            <Route path='/strain/add' component={StrainSavingForm} />
+                            <Route
+                                path='/catalog'
+                                component={MicroorganismsCatalog}
+                            />
+                            <Route
+                                path='/strain/add'
+                                component={StrainSavingForm}
+                            />
                             {/* <Route path='/strain/search' component={undefined} /> */}
-                            <Route path='/properties' component={PropertyEditForm} />
+                            <Route
+                                path='/properties'
+                                component={PropertyEditForm}
+                            />
                             <Route
                                 path='/strain/:strainId/edit'
                                 component={StrainSavingForm}

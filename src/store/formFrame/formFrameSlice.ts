@@ -6,8 +6,21 @@ export enum MenuKey {
     CATALOG,
     STRAIN_SAVE,
     PROPERTY_EDIT,
-    TEST1,
-    TEST2,
+}
+
+interface MenuItem {
+    id: MenuKey;
+    url: string;
+    label: string;
+}
+
+export interface FormFrameState {
+    title: string;
+    menu: {
+        isVisible: boolean;
+        activeId: MenuItem['id'];
+        items: MenuItem[];
+    };
 }
 
 export const formFrameSlice = createSlice({
@@ -23,8 +36,6 @@ export const formFrameSlice = createSlice({
             state.menu.isVisible = !state.menu.isVisible;
         },
         setActiveMenuItemByKey: (state, action: PayloadAction<MenuKey>) => {
-            console.log(action.payload);
-            console.log(state.menu.items);
             state.menu.activeId = state.menu.items[action.payload].id;
         },
         setTitleByActiveItem: (state) => {
@@ -42,10 +53,6 @@ export const {
 } = formFrameSlice.actions;
 
 export const selectFormFrame = (state: RootState) => state.formFrame;
-const activeMenuItem = (state: RootState) => {
-    const id = state.formFrame.menu.activeId;
-    return state.formFrame.menu.items[id];
-};
 
 const formFrameReducer = formFrameSlice.reducer;
 export default formFrameReducer;
