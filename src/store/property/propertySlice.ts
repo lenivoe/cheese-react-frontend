@@ -1,154 +1,144 @@
 import {
-    createAsyncThunk,
-    createSlice,
-    SerializedError,
+  createAsyncThunk,
+  createSlice,
+  SerializedError,
 } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import API from '../../utils/API';
 import FormalProperty from '../../models/Property/FormalProperty';
-import FormalParameter from '../../models/FormalParameter';
-import Property from '../../models/Property/Property';
-
-
-export type UsingParam = FormalParameter & { isUsing?: boolean };
-export type UsingProperty = Property<UsingParam> & { isUsing?: boolean };
 
 export interface PropertyState {
-    prop?: UsingProperty;
-    propList: UsingProperty[];
-    status: 'idle' | 'loading' | 'failed' | 'success';
-    error?: SerializedError;
+  propList: FormalProperty[];
+  isUsingById: {
+    prop: { [key: number]: boolean };
+    param: { [key: number]: boolean };
+  };
+  status: 'idle' | 'loading' | 'failed' | 'success';
+  error?: SerializedError;
 }
 
 const initialState: PropertyState = {
-    propList: [],
-    status: 'idle',
+  propList: [],
+  isUsingById: { prop: {}, param: {} },
+  status: 'idle',
 };
 
 export const downloadProperties = createAsyncThunk(
-    'properties/downloadListWithParams',
-    async () => {
-        const allProperties = await API.property.getAllWithParameters();
-        const paramIdList = allProperties.flatMap((prop) => {
-            const paramList = [
-                ...(prop.ungrouped ?? []),
-                ...(prop.groups ?? []).flatMap((group) => group.parameters),
-            ];
-            return paramList.map((param) => param.id!);
-        });
+  'properties/downloadAllWithParams',
+  async () => {
+    const propList = await API.property.getAllWithParameters();
+    const paramIdList = propList.flatMap((prop) => {
+      const paramList = prop.groups?.[0].parameters ?? [];
+      return paramList.map((param) => param.id);
+    });
 
-        const isUsingList = await API.formalParameter.isListUsing(paramIdList);
+    const isUsingList = await API.formalParameter.isListUsing(paramIdList);
 
-        const addUsingInfo = (param: FormalParameter) => ({
-            ...param,
-            isUsing: isUsingList[param.id!],
-        });
+    const isUsingParamById: { [key: number]: boolean } = {};
+    paramIdList.forEach((id, i) => {
+      isUsingParamById[id] = isUsingList[i];
+    });
 
-        const propList = allProperties.map((prop) => {
-            const ungrouped = prop.ungrouped?.map(addUsingInfo);
-            const groups = prop.groups?.map(({ parameters, ...rest }) => ({
-                ...rest,
-                parameters: parameters.map(addUsingInfo),
-            }));
+    const isUsingPropById: { [key: number]: boolean } = {};
+    propList.forEach((prop) => {
+      if (!prop.groups) {
+        isUsingPropById[prop.id] = false;
+      } else {
+        const isUsing = prop.groups[0].parameters.some(
+          (param) => isUsingParamById[param.id]
+        );
+        isUsingPropById[prop.id] = isUsing;
+      }
+    });
 
-            const isUsing =
-                !!ungrouped?.find((param) => param.isUsing) ||
-                !!groups?.find(
-                    (group) => !!group.parameters.find((param) => param.isUsing)
-                );
-
-            return { ...prop, ungrouped, groups, isUsing };
-        });
-
-        return propList;
-    }
+    return {
+      propList,
+      isUsingById: {
+        prop: isUsingPropById,
+        param: isUsingParamById,
+      },
+    };
+  }
 );
 
 export const uploadProperty = createAsyncThunk(
-    'properties/uploadOneWithParams',
-    async (property: FormalProperty) => {
-        return API.property.postWithParams(property);
-    }
+  'properties/uploadOneWithParams',
+  async (property: FormalProperty | Omit<FormalProperty, 'id'>) => {
+    return API.property.postWithParams(property);
+  }
 );
 
 export const deleteProperty = createAsyncThunk(
-    'properties/deleteOne',
-    async (id: number) => {
-        const deleted = await API.property.delete(id);
-        console.log('>>> [test] deleted property', deleted);
-        return id;
-    }
+  'properties/deleteOne',
+  async (id: number) => {
+    const deleted = await API.property.delete(id);
+    console.log('>>> [test] deleted property', deleted);
+    return id;
+  }
 );
 
 export const propertySlice = createSlice({
-    name: 'properties',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            // download property list
-            .addCase(downloadProperties.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(
-                downloadProperties.fulfilled,
-                (state, { payload: propList }) => {
-                    state.status = 'success';
-                    state.propList = propList;
-                }
-            )
-            .addCase(downloadProperties.rejected, (state, { error }) => {
-                state.status = 'failed';
-                state.error = error;
-            })
+  name: 'properties',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      // download property list
+      .addCase(downloadProperties.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(downloadProperties.fulfilled, (state, { payload }) => {
+        state.status = 'success';
+        state.propList = payload.propList;
+        state.isUsingById = payload.isUsingById;
+      })
+      .addCase(downloadProperties.rejected, (state, { error }) => {
+        state.status = 'failed';
+        state.error = error;
+      })
 
-            // add/edit one property
-            .addCase(uploadProperty.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(
-                uploadProperty.fulfilled,
-                (state, { payload: uploadedProp }) => {
-                    state.status = 'success';
+      // add/edit one property
+      .addCase(uploadProperty.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(uploadProperty.fulfilled, (state, { payload: uploadedProp }) => {
+        state.status = 'success';
 
-                    console.log('>>> [test] uploadedProp, response:', uploadedProp);
+        console.log('>>> [test] uploadedProp, response:', uploadedProp);
 
-                    // обновление или добавление загруженного на сервер свойства
-                    const idx = state.propList.findIndex(
-                        (prop) => prop.id === uploadedProp.id
-                    );
-                    if (idx >= 0) {
-                        state.propList[idx] = uploadedProp;
-                    } else {
-                        state.propList.push(uploadedProp);
-                    }
-                }
-            )
-            .addCase(uploadProperty.rejected, (state, { error }) => {
-                state.status = 'failed';
-                state.error = error;
-            })
+        // обновление или добавление загруженного на сервер свойства
+        const idx = state.propList.findIndex(
+          (prop) => prop.id === uploadedProp.id
+        );
+        if (idx >= 0) {
+          state.propList[idx] = uploadedProp;
+        } else {
+          state.propList.push(uploadedProp);
+        }
+      })
+      .addCase(uploadProperty.rejected, (state, { error }) => {
+        state.status = 'failed';
+        state.error = error;
+      })
 
-            // remove property by id
-            .addCase(deleteProperty.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(deleteProperty.fulfilled, (state, { payload: id }) => {
-                state.status = 'success';
-                const idx = state.propList.findIndex((prop) => prop.id === id);
-                if (idx >= 0) {
-                    state.propList.splice(idx, 1);
-                } else {
-                    console.warn(
-                        `DELETE: propList has not element with id = ${id}`
-                    );
-                }
-            })
-            .addCase(deleteProperty.rejected, (state, { error }) => {
-                state.status = 'failed';
-                state.error = error;
-            });
-    },
+      // remove property by id
+      .addCase(deleteProperty.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteProperty.fulfilled, (state, { payload: id }) => {
+        state.status = 'success';
+        const idx = state.propList.findIndex((prop) => prop.id === id);
+        if (idx >= 0) {
+          state.propList.splice(idx, 1);
+        } else {
+          console.warn(`DELETE: propList has not element with id = ${id}`);
+        }
+      })
+      .addCase(deleteProperty.rejected, (state, { error }) => {
+        state.status = 'failed';
+        state.error = error;
+      });
+  },
 });
 
 export const selectPropertyState = (state: RootState) => state.property;

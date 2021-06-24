@@ -1,12 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import formFrameReducer from './formFrame/formFrameSlice';
 import propertyReducer from './property/propertySlice';
-import propertyEditFormReducer from './propertyEditForm/propertyEditFormSlice';
 
 export const store = configureStore({
     reducer: {
         formFrame: formFrameReducer,
-        propertyEditFrom: propertyEditFormReducer,
         property: propertyReducer,
     },
 });

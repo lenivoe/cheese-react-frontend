@@ -14,16 +14,16 @@ export function getInitState(): FormFrameState {
     ];
 
     const items = menuUrlList.map(
-        (url, i) => ({ id: i, url, label: menuLabels[i] } as const)
+        (url, i) => ({ key: i, url, label: menuLabels[i] } as const)
     );
 
     const activeId = MenuKey.CATALOG;
 
     return {
-        title: items[activeId].label,
+        headerTitle: items[activeId].label,
         menu: {
             isVisible: true,
-            activeId: activeId,
+            activeItemKey: activeId,
             items: items,
         },
     };

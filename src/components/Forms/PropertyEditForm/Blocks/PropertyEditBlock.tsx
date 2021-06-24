@@ -1,69 +1,118 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ButtonItem from '../../Items/ButtonItem';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { selectPropertyState } from '../../../../store/property/propertySlice';
 import {
-    selectMode,
-    setMode,
-} from '../../../../store/propertyEditForm/propertyEditFormSlice';
-import ParameterList from './ParameterList';
-import PropertyList from './PropertyList';
+  downloadProperties,
+  selectPropertyState,
+} from '../../../../store/property/propertySlice';
+import classNames from 'classnames';
+import DataList from './DataList';
 
-const btnClassName = (part: string, isActive: boolean) => {
-    const active = isActive ? 'active' : '';
-    return `form-menu__${part}-button form-menu__button ${active}`;
+export type EditMode =
+  | 'ADD_PROP'
+  | 'EDIT_PROP'
+  | 'ADD_PARAM'
+  | 'EDIT_PARAM'
+  | 'NONE';
+
+interface Props {
+  selectedPropId?: number;
+  onPropSelect: (id: number) => void;
+  onPropDelete: (id: number) => void;
+
+  selectedParamId?: number;
+  onParamSelect: (id: number) => void;
+  onParamDelete: (id: number) => void;
+
+  mode: EditMode;
+  onModeChange: (mode: EditMode) => void;
+}
+
+const btnClassName = (part: string, active: boolean) => {
+  const baseClass = `form-menu__${part}-button form-menu__button`;
+  return classNames(baseClass, { active });
 };
 
-export default function PropertyEditBlock() {
-    const dispatch = useAppDispatch();
-    const { propList, status, error } = useAppSelector(selectPropertyState);
-    const disabled = status !== 'success';
-    const mode = useAppSelector(selectMode);
+export default function PropertyEditBlock(props: Props) {
+  const {
+    selectedPropId,
+    onPropSelect,
+    onPropDelete,
 
-    return (
-        <div className='property-edit__info-block info-block'>
-            <PropertyList />
-            {/* <ParameterList name='paramInfo.selected.id' /> */}
+    selectedParamId,
+    onParamSelect,
+    onParamDelete,
 
-            <div className='property-edit__form-menu form-menu'>
-                <div className='form-menu__buttons-block'>
-                    <ButtonItem
-                        label='Добавить свойство'
-                        className={btnClassName(
-                            'add-property',
-                            mode === 'ADD_PROP'
-                        )}
-                        onClick={() => dispatch(setMode('ADD_PROP'))}
-                    />
-                    <ButtonItem
-                        label='Изменить свойство'
-                        className={btnClassName(
-                            'edit-property',
-                            mode === 'EDIT_PROP'
-                        )}
-                        onClick={() => dispatch(setMode('EDIT_PROP'))}
-                    />
-                </div>
+    mode,
+    onModeChange,
+  } = props;
 
-                <div className='form-menu__buttons-block'>
-                    <ButtonItem
-                        label='Добавить параметр'
-                        className={btnClassName(
-                            'add-parameter',
-                            mode === 'ADD_PARAM'
-                        )}
-                        onClick={() => dispatch(setMode('ADD_PARAM'))}
-                    />
-                    <ButtonItem
-                        label='Изменить параметр'
-                        className={btnClassName(
-                            'edit-parameter',
-                            mode === 'EDIT_PARAM'
-                        )}
-                        onClick={() => dispatch(setMode('EDIT_PARAM'))}
-                    />
-                </div>
-            </div>
+  const dispatch = useAppDispatch();
+  const { propList, status } = useAppSelector(selectPropertyState);
+  const disabled = status !== 'success';
+
+  if (propList.length === 0) {
+    dispatch(downloadProperties());
+  }
+
+  const paramList = useMemo(() => {
+    const prop = propList?.find((prop) => prop.id === selectedPropId);
+    return prop?.groups?.[0].parameters ?? [];
+  }, [propList, selectedPropId]);
+
+  return (
+    <div className='property-edit__info-block info-block'>
+      <DataList
+        cssPrefix='properties'
+        title='Свойства'
+        deleteButtonLabel='Удалить свойство'
+        selectedId={selectedPropId}
+        onSelect={onPropSelect}
+        onDelete={onPropDelete}
+        itemList={propList}
+      />
+
+      <DataList
+        cssPrefix='parameters'
+        title='Параметры'
+        deleteButtonLabel='Удалить параметр'
+        selectedId={selectedParamId}
+        onSelect={onParamSelect}
+        onDelete={onParamDelete}
+        itemList={paramList}
+      />
+
+      <div className='property-edit__form-menu form-menu'>
+        <div className='form-menu__buttons-block'>
+          <ButtonItem
+            label='Добавить свойство'
+            className={btnClassName('add-property', mode === 'ADD_PROP')}
+            onClick={() => onModeChange('ADD_PROP')}
+            disabled={disabled}
+          />
+          <ButtonItem
+            label='Изменить свойство'
+            className={btnClassName('edit-property', mode === 'EDIT_PROP')}
+            onClick={() => onModeChange('EDIT_PROP')}
+            disabled={disabled}
+          />
         </div>
-    );
+
+        <div className='form-menu__buttons-block'>
+          <ButtonItem
+            label='Добавить параметр'
+            className={btnClassName('add-parameter', mode === 'ADD_PARAM')}
+            onClick={() => onModeChange('ADD_PARAM')}
+            disabled={disabled}
+          />
+          <ButtonItem
+            label='Изменить параметр'
+            className={btnClassName('edit-parameter', mode === 'EDIT_PARAM')}
+            onClick={() => onModeChange('EDIT_PARAM')}
+            disabled={disabled}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -3,53 +3,53 @@ import { RootState } from '../store';
 import { getInitState } from './getInitState';
 
 export enum MenuKey {
-    CATALOG,
-    STRAIN_SAVE,
-    PROPERTY_EDIT,
+  CATALOG,
+  STRAIN_SAVE,
+  PROPERTY_EDIT,
 }
 
 interface MenuItem {
-    id: MenuKey;
-    url: string;
-    label: string;
+  key: MenuKey;
+  url: string;
+  label: string;
 }
 
 export interface FormFrameState {
-    title: string;
-    menu: {
-        isVisible: boolean;
-        activeId: MenuItem['id'];
-        items: MenuItem[];
-    };
+  headerTitle: string;
+  menu: {
+    isVisible: boolean;
+    activeItemKey: MenuItem['key'];
+    items: MenuItem[];
+  };
 }
 
 export const formFrameSlice = createSlice({
-    name: 'formFrame',
-    initialState: getInitState(),
-    reducers: {
-        // задает заголовок напрямую
-        setTitle: (state, action: PayloadAction<string>) => {
-            state.title = action.payload;
-        },
-        // переключает видимость бокового меню
-        toggleMenuVisibility: (state) => {
-            state.menu.isVisible = !state.menu.isVisible;
-        },
-        setActiveMenuItemByKey: (state, action: PayloadAction<MenuKey>) => {
-            state.menu.activeId = state.menu.items[action.payload].id;
-        },
-        setTitleByActiveItem: (state) => {
-            const id = state.menu.activeId;
-            state.title = state.menu.items[id].label;
-        },
+  name: 'formFrame',
+  initialState: getInitState(),
+  reducers: {
+    // переключает видимость бокового меню
+    toggleMenuVisibility: (state) => {
+      state.menu.isVisible = !state.menu.isVisible;
     },
+    setActiveMenuItemByKey: (state, { payload }: PayloadAction<MenuKey>) => {
+      state.menu.activeItemKey = state.menu.items[payload].key;
+    },
+    setTitleByActiveItem: (state) => {
+      const key = state.menu.activeItemKey;
+      state.headerTitle = state.menu.items[key].label;
+    },
+    // задает заголовок напрямую
+    setHeaderTitle: (state, { payload: title }: PayloadAction<string>) => {
+      state.headerTitle = title;
+    },
+  },
 });
 
 export const {
-    setTitle,
-    toggleMenuVisibility,
-    setActiveMenuItemByKey,
-    setTitleByActiveItem,
+  toggleMenuVisibility,
+  setActiveMenuItemByKey,
+  setTitleByActiveItem,
+  setHeaderTitle,
 } = formFrameSlice.actions;
 
 export const selectFormFrame = (state: RootState) => state.formFrame;
