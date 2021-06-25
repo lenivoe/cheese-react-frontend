@@ -1,6 +1,14 @@
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
+CREATE SEQUENCE IF NOT EXISTS FormalParameterGroupIdSequence
+INCREMENT 1
+START 1;
+
+CREATE SEQUENCE IF NOT EXISTS FactParameterGroupIdSequence
+INCREMENT 1
+START 1;
+
 -- Adminer 4.8.1 PostgreSQL 13.3 (Debian 13.3-1.pgdg100+1) dump
 
 CREATE TABLE "public"."action_type" (
@@ -22,10 +30,11 @@ CREATE TABLE "public"."fact_parameter" (
 ) WITH (oids = false);
 
 INSERT INTO "fact_parameter" ("id", "group_id", "reserve", "value", "formal_parameter_id", "strain_id") VALUES
-(1,	1,	NULL,	'123',	1,	1),
-(3,	1,	NULL,	'333',	4,	1),
-(4,	3,	NULL,	'baa',	2,	1),
-(2,	2,	NULL,	'gag',	2,	1);
+(1,	1,	NULL,	'15',	1,	1),
+(3,	1,	NULL,	'5',	4,	1),
+(5,	2,	NULL,	'12',	1,	1),
+(6,	2,	NULL,	'6',	4,	1),
+(4,	3,	NULL,	'мягкий',	2,	1);
 
 CREATE SEQUENCE formal_parameter_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
 
@@ -117,8 +126,9 @@ CREATE TABLE "public"."strain" (
 ) WITH (oids = false);
 
 INSERT INTO "strain" ("id", "collection_index", "creator", "date_added", "date_receiving", "name", "obtaining_method", "source", "type_id") VALUES
-(1,	'1',	'2',	'2021-04-15',	'2021-04-15',	'22ХВ',	'Free',	'Src',	5),
-(2,	'22',	'22',	'2021-04-15',	'2021-04-15',	'41УС',	'22',	'Src',	5);
+(1,	'СКМ-766',	'2',	'2021-04-15',	'2021-04-15',	'22ХВ',	'Смыв с груши',	'Пермская лаборатория №3',	5),
+(2,	'СКМ-732',	'22',	'2021-04-15',	'2021-04-15',	'41УС',	'Выведен из молока',	'Лаборатория',	5),
+(3,	'СКМ-701',	'22',	'2021-04-15',	'2021-04-15',	'41УС-Б',	'Мутант штамма 41УС',	'Лаборатория',	5);
 
 CREATE SEQUENCE strain_genus_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
 

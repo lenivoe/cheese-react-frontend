@@ -14,6 +14,8 @@ import {
 import FormErrorMessage from '../Items/FormErrorMessage';
 import { useCallback } from 'react';
 import PropertySavingBlock from './Blocks/PropertySavingBlock';
+import FormalProperty from '../../../models/Property/FormalProperty';
+import ParamSavingBlock from './Blocks/ParamSavingBlock';
 
 export default function PropertyEditForm() {
   const dispatch = useAppDispatch();
@@ -59,19 +61,32 @@ export default function PropertyEditForm() {
       const idx = (prop?.groups?.[0].parameters ?? []).findIndex(
         (param) => param.id === id
       );
-      if (idx >= 0) {
-        prop?.groups?.[0].parameters.splice(idx, 1);
-        dispatch(uploadProperty(prop!));
+      if (idx >= 0 && prop?.groups?.[0].parameters) {
+        const parameters = prop.groups[0].parameters.filter(
+          (param, i) => i !== idx
+        );
+
+        const updatedProp: FormalProperty = {
+          ...prop,
+          groups: [
+            {
+              ...prop.groups[0],
+              parameters,
+            },
+          ],
+        };
+
+        dispatch(uploadProperty(updatedProp));
       }
     },
-    [dispatch]
+    [dispatch, propList]
   );
 
   return (
     <div>
       <FormErrorMessage loading={status === 'loading'} error={error} />
 
-      <div className='property-edit'>
+      <div className="property-edit">
         <PropertyEditBlock
           selectedPropId={selectedPropId}
           onPropSelect={onPropSelect}
@@ -83,16 +98,16 @@ export default function PropertyEditForm() {
           onModeChange={onModeChange}
         />
 
-        <div className='property-edit__form-block'>
+        <div className="property-edit__form-block">
           <PropertySavingBlock
+            propertyId={selectedPropId}
             needEdit={mode === 'EDIT_PROP'}
-            visible={!!selectedPropId}
+            visible={mode === 'ADD_PROP' || mode === 'EDIT_PROP'}
           />
-          {/* <ParamSavingBlock
-              id={undefined && 'parameter?.id'}
-              needEdit={state === 'EDIT_PARAM'}
-              visible={isParamSave}
-          /> */}
+          <ParamSavingBlock
+            needEdit={mode === 'EDIT_PARAM'}
+            visible={mode === 'ADD_PARAM' || mode === 'EDIT_PARAM'}
+          />
         </div>
       </div>
     </div>

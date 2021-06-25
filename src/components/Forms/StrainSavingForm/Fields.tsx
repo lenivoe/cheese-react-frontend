@@ -1,10 +1,10 @@
 import React from 'react';
 import { DATE_FORMAT } from '../../../models/ParamDataType';
-import DateItem from '../Items/DateItem';
-import SelectItem from '../Items/SelectItem';
-import TextItem from '../Items/TextItem';
-import withCompositeCssClass from '../Items/hoc/withCompositeCssClass';
-import withError from '../Items/hoc/withError';
+import DateItem from '../FormikItems/DateItem';
+import SelectItem from '../FormikItems/SelectItem';
+import TextItem from '../FormikItems/TextItem';
+import withCompositeCssClass from '../FormikItems/hoc/withCompositeCssClass';
+import withError from '../FormikItems/hoc/withError';
 
 export const TextField = withError(withCompositeCssClass(TextItem, 'strain-form'), 'form-error');
 

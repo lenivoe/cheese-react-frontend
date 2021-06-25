@@ -7,6 +7,7 @@ import {
 } from '../../../../store/property/propertySlice';
 import classNames from 'classnames';
 import DataList from './DataList';
+import { useEffect } from 'react';
 
 export type EditMode =
   | 'ADD_PROP'
@@ -51,9 +52,11 @@ export default function PropertyEditBlock(props: Props) {
   const { propList, status } = useAppSelector(selectPropertyState);
   const disabled = status !== 'success';
 
-  if (propList.length === 0) {
-    dispatch(downloadProperties());
-  }
+  useEffect(() => {
+    if (propList.length === 0) {
+      dispatch(downloadProperties());
+    }
+  });
 
   const paramList = useMemo(() => {
     const prop = propList?.find((prop) => prop.id === selectedPropId);
@@ -61,11 +64,11 @@ export default function PropertyEditBlock(props: Props) {
   }, [propList, selectedPropId]);
 
   return (
-    <div className='property-edit__info-block info-block'>
+    <div className="property-edit__info-block info-block">
       <DataList
-        cssPrefix='properties'
-        title='Свойства'
-        deleteButtonLabel='Удалить свойство'
+        cssPrefix="properties"
+        title="Свойства"
+        deleteButtonLabel="Удалить свойство"
         selectedId={selectedPropId}
         onSelect={onPropSelect}
         onDelete={onPropDelete}
@@ -73,40 +76,40 @@ export default function PropertyEditBlock(props: Props) {
       />
 
       <DataList
-        cssPrefix='parameters'
-        title='Параметры'
-        deleteButtonLabel='Удалить параметр'
+        cssPrefix="parameters"
+        title="Параметры"
+        deleteButtonLabel="Удалить параметр"
         selectedId={selectedParamId}
         onSelect={onParamSelect}
         onDelete={onParamDelete}
         itemList={paramList}
       />
 
-      <div className='property-edit__form-menu form-menu'>
-        <div className='form-menu__buttons-block'>
+      <div className="property-edit__form-menu form-menu">
+        <div className="form-menu__buttons-block">
           <ButtonItem
-            label='Добавить свойство'
+            label="Добавить свойство"
             className={btnClassName('add-property', mode === 'ADD_PROP')}
             onClick={() => onModeChange('ADD_PROP')}
             disabled={disabled}
           />
           <ButtonItem
-            label='Изменить свойство'
+            label="Изменить свойство"
             className={btnClassName('edit-property', mode === 'EDIT_PROP')}
             onClick={() => onModeChange('EDIT_PROP')}
             disabled={disabled}
           />
         </div>
 
-        <div className='form-menu__buttons-block'>
+        <div className="form-menu__buttons-block">
           <ButtonItem
-            label='Добавить параметр'
+            label="Добавить параметр"
             className={btnClassName('add-parameter', mode === 'ADD_PARAM')}
             onClick={() => onModeChange('ADD_PARAM')}
             disabled={disabled}
           />
           <ButtonItem
-            label='Изменить параметр'
+            label="Изменить параметр"
             className={btnClassName('edit-parameter', mode === 'EDIT_PARAM')}
             onClick={() => onModeChange('EDIT_PARAM')}
             disabled={disabled}

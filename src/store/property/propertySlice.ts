@@ -6,6 +6,7 @@ import {
 import { RootState } from '../store';
 import API from '../../utils/API';
 import FormalProperty from '../../models/Property/FormalProperty';
+import ParamDataType from '../../models/ParamDataType';
 
 export interface PropertyState {
   propList: FormalProperty[];
@@ -13,6 +14,7 @@ export interface PropertyState {
     prop: { [key: number]: boolean };
     param: { [key: number]: boolean };
   };
+  typeList: ParamDataType[],
   status: 'idle' | 'loading' | 'failed' | 'success';
   error?: SerializedError;
 }
@@ -20,6 +22,7 @@ export interface PropertyState {
 const initialState: PropertyState = {
   propList: [],
   isUsingById: { prop: {}, param: {} },
+  typeList: [],
   status: 'idle',
 };
 
@@ -72,10 +75,16 @@ export const deleteProperty = createAsyncThunk(
   'properties/deleteOne',
   async (id: number) => {
     const deleted = await API.property.delete(id);
-    console.log('>>> [test] deleted property', deleted);
+    console.log('[log] deleted property:', deleted);
     return id;
   }
 );
+
+export const getAllDataTypes = createAsyncThunk('dataType/getAll', async () => {
+  const dataTypeList = await API.dataType.getAll();
+  console.log('[log] data type list:', dataTypeList);
+  return dataTypeList;
+});
 
 export const propertySlice = createSlice({
   name: 'properties',
@@ -135,6 +144,19 @@ export const propertySlice = createSlice({
         }
       })
       .addCase(deleteProperty.rejected, (state, { error }) => {
+        state.status = 'failed';
+        state.error = error;
+      })
+
+      // get data type list
+      .addCase(getAllDataTypes.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getAllDataTypes.fulfilled, (state, { payload: typeList }) => {
+        state.status = 'success';
+        state.typeList = typeList;
+      })
+      .addCase(getAllDataTypes.rejected, (state, { error }) => {
         state.status = 'failed';
         state.error = error;
       });

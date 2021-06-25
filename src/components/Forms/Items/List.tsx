@@ -1,6 +1,6 @@
-import assert from 'assert';
-import React, { useCallback } from 'react';
-import classNames from 'classnames';
+import assert from "assert";
+import React, { useCallback } from "react";
+import classNames from "classnames";
 
 export interface ListProps<T> {
   value?: T;
@@ -39,7 +39,7 @@ interface ListItemProps<T> {
 
 function ListItem<T>(props: ListItemProps<T>) {
   const { value, selected, disabled, onClick, children } = props;
-  const className = classNames('list-item', { active: selected });
+  const className = classNames("list-item", { active: selected });
   const action = useCallback(
     () => disabled || onClick?.(value),
     [value, disabled, onClick]
